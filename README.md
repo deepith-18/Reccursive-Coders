@@ -7,7 +7,7 @@ A comprehensive, role-based platform designed for training companies to manage s
 ## 🛠 Tech Stack
 
 - **Monorepo**: pnpm workspaces + Turborepo
-- **Backend**: Java 21, Spring Boot 3.3.4, Spring Data JPA, PostgreSQL 16, Flyway, Springdoc OpenAPI 3.0, MapStruct, Lombok
+- **Backend**: Java 21, Spring Boot 3.3.4, Spring Data JPA, PostgreSQL 16, Flyway, Spring Security (JWT + Refresh Tokens), Springdoc OpenAPI 3.0, MapStruct, Lombok, OpenCSV
 - **Frontend**: React 18, Vite, TypeScript (strict), TanStack Query, React Router v6, Tailwind CSS, Lucide Icons, Axios
 - **Code Execution**: Self-hosted Judge0 (Docker sandbox)
 - **CI / Infra**: GitHub Actions CI, Docker Compose
@@ -30,6 +30,16 @@ placement-platform/
 ├── docs/                         # Architecture, API conventions, and ADRs
 └── .github/workflows/ci.yml      # Multi-stage CI pipeline
 ```
+
+---
+
+## 🔑 Default Seed Credentials (Phase 1)
+
+| Role | Email | Password | Force Password Change |
+| :--- | :--- | :--- | :--- |
+| **ADMIN** | `admin@company.com` | `AdminPassword123!` | No |
+| **TRAINER (Created)** | *Assigned by Admin* | `Welcome@2026!` | Yes |
+| **STUDENT (Created / CSV)** | *Assigned by Admin* | `Welcome@2026!` | Yes |
 
 ---
 
@@ -58,7 +68,8 @@ docker compose up -d postgres
 ### 4. Run the Backend API
 ```bash
 cd apps/api
-./mvnw clean test spring-boot:run
+# Runs Flyway migrations (V1 baseline + V2 auth/users) and launches on port 8080
+.\mvnw.cmd clean test spring-boot:run
 ```
 - API Base URL: `http://localhost:8080`
 - Health Endpoint: `http://localhost:8080/api/v1/health`
@@ -70,28 +81,23 @@ cd apps/api
 # Install dependencies from root
 pnpm install
 
+# (Optional) Re-generate TypeScript API client from backend OpenAPI spec
+pnpm generate-api
+
 # Start Vite dev server
 pnpm --filter @placement/web run dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
-
----
-
-## 🔄 OpenAPI Client Generation
-To synchronize backend changes with the frontend TypeScript client:
-```bash
-pnpm generate-api
-```
-This updates `@/api/generated` models and services with zero type drift.
+- Navigate to `/login` to sign in as Administrator or test student/trainer portals.
 
 ---
 
 ## 🧪 Testing
 
-### Backend Unit & Context Tests
+### Backend Unit & Integration Tests (12 tests)
 ```bash
 cd apps/api
-./mvnw test
+.\mvnw.cmd test
 ```
 
 ### Frontend Type-Checking & Production Build
@@ -103,7 +109,7 @@ pnpm --filter @placement/web run build
 
 ## 📋 Roadmap & Phase Status
 - [x] **Phase 0 - Foundation**: Monorepo skeleton, Spring Boot modular monolith, Flyway baseline, React app shell with Student/Trainer/Admin portals, Docker Compose, CI, and OpenAPI client generation.
-- [ ] **Phase 1 - Auth & RBAC**: JWT login/refresh, role guards, seeded admin, user creation, CSV bulk import, and audit logging.
+- [x] **Phase 1 - Auth & RBAC**: Stateless JWT + refresh token rotation, password hashing, seeded admin, user creation, CSV bulk import, force-change-password, and audit log table.
 - [ ] **Phase 2 - Student Profile & Batches**: Batch CRUD, profile credentials, resume upload, and trainer-to-batch assignment.
 - [ ] **Phase 3 - Questions & Assignments**: Markdown question builder, sample & hidden test cases, assignments with deadlines.
 - [ ] **Phase 4 - Coding Practice & Execution**: Judge0 sandbox, Monaco editor, Run vs Submit verdicts.

@@ -1,10 +1,13 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Terminal, Shield, GraduationCap, Briefcase, Sparkles } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Terminal, Shield, GraduationCap, Briefcase, LogOut, LogIn } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
+import { useAuth } from '@/features/auth/AuthContext';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const getActivePortal = () => {
     if (location.pathname.startsWith('/student')) return 'STUDENT';
@@ -14,6 +17,11 @@ export const Navbar: React.FC = () => {
   };
 
   const activePortal = getActivePortal();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 glass-panel">
@@ -27,7 +35,7 @@ export const Navbar: React.FC = () => {
             <div className="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5">
               PLACEMENT<span className="text-blue-500">PLATFORM</span>
               <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                Phase 0
+                Phase 1 Auth
               </span>
             </div>
             <p className="text-[11px] text-muted-foreground font-medium hidden sm:block">
@@ -75,15 +83,34 @@ export const Navbar: React.FC = () => {
           </Link>
         </nav>
 
-        {/* Status indicator / User profile shell */}
+        {/* User profile shell / Auth status */}
         <div className="flex items-center gap-3">
-          {activePortal ? (
-            <StatusBadge status={activePortal} />
-          ) : (
-            <div className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-              <span>Foundation Ready</span>
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-3">
+              <div className="text-right hidden md:block">
+                <div className="text-xs font-bold text-white flex items-center justify-end gap-1.5">
+                  <span>{user.fullName}</span>
+                  <StatusBadge status={user.role || 'USER'} />
+                </div>
+                <div className="text-[11px] text-muted-foreground font-mono">{user.email}</div>
+              </div>
+
+              <button
+                onClick={handleLogout}
+                title="Sign Out"
+                className="p-2 rounded-xl bg-secondary hover:bg-rose-500/10 hover:text-rose-400 text-muted-foreground border border-white/10 transition-colors cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
+          ) : (
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary text-white text-xs font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Sign In</span>
+            </Link>
           )}
         </div>
       </div>

@@ -29,3 +29,15 @@
 - **Status**: Accepted
 - **Context**: Hibernate `ddl-auto: update` is unsafe for production and loses history.
 - **Decision**: Hibernate `ddl-auto: validate` with Flyway sequential migrations (`V1__...`, `V2__...`).
+
+## ADR-0006: JWT with Refresh Token Rotation & Hashed Storage
+- **Date**: 2026-10-10
+- **Status**: Accepted
+- **Context**: Refresh tokens stored as plain text can be stolen if the database is compromised; refresh tokens without rotation can be replayed.
+- **Decision**: Refresh tokens are cryptographically hashed (SHA-256) at rest in the `refresh_tokens` table. On every token refresh, the used token is revoked and a new pair is issued (Token Rotation).
+
+## ADR-0007: Mandatory Force Password Change for Provisioned Accounts
+- **Date**: 2026-10-10
+- **Status**: Accepted
+- **Context**: Admins and batch CSV imports provision accounts with temporary default passwords (`Welcome@2026!`). Users should never continue using known temporary passwords.
+- **Decision**: The `force_password_change` boolean flag is asserted in JWT claims and database records. The frontend interceptor and `RoleGuard` block access to the dashboard until the user sets a new personal password via `POST /api/v1/auth/change-password`.
