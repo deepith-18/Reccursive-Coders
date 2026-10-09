@@ -41,3 +41,15 @@
 - **Status**: Accepted
 - **Context**: Admins and batch CSV imports provision accounts with temporary default passwords (`Welcome@2026!`). Users should never continue using known temporary passwords.
 - **Decision**: The `force_password_change` boolean flag is asserted in JWT claims and database records. The frontend interceptor and `RoleGuard` block access to the dashboard until the user sets a new personal password via `POST /api/v1/auth/change-password`.
+
+## ADR-0008: Cohort Batch & Student Enrollment Model
+- **Date**: 2026-10-10
+- **Status**: Accepted
+- **Context**: Students must be grouped into training cohorts with assigned lead trainers, scheduled timelines, and enrollment rosters.
+- **Decision**: Modeled with `batches` and a dedicated `batch_students` junction table enforcing a unique constraint on `(batch_id, student_id)` and tracking `enrolled_at`. Lead trainers are associated via foreign key `trainer_id` with `SET NULL` on user deletion.
+
+## ADR-0009: Student Profile Completion & Secure Resume Storage
+- **Date**: 2026-10-10
+- **Status**: Accepted
+- **Context**: Students need to record college credentials, CGPA, technical skills, portfolio URLs, and upload PDF/DOCX resumes for placement drives without risking direct public file exposure.
+- **Decision**: Academic credentials and skills arrays are stored in `student_profiles` linked 1:1 to `users`. Resumes are stored on disk in a dedicated directory with max 5MB validation, tracked via file metadata in the database, and served through an authenticated binary endpoint (`GET /api/v1/students/profile/resume`) requiring student ownership or recruiter/admin role. Profile completeness is dynamically computed on read.

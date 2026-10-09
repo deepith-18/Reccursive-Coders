@@ -94,7 +94,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 🧪 Testing
 
-### Backend Unit & Integration Tests (12 tests)
+### Backend Unit & Integration Tests (16 tests)
 ```bash
 cd apps/api
 .\mvnw.cmd test
@@ -107,10 +107,31 @@ pnpm --filter @placement/web run build
 
 ---
 
+## 📡 API Endpoints Overview
+
+### Phase 2: Cohorts & Student Profile
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/batches` | `ADMIN` | Create a new cohort batch |
+| `GET` | `/api/v1/batches` | Authenticated | List batches with status, trainer, search filters |
+| `GET` | `/api/v1/batches/{id}` | Authenticated | Get cohort overview details |
+| `POST` | `/api/v1/batches/{id}/trainer` | `ADMIN` | Assign or change lead trainer |
+| `GET` | `/api/v1/batches/{id}/students` | `ADMIN`, `TRAINER` | View cohort student roster |
+| `POST` | `/api/v1/batches/{id}/students` | `ADMIN` | Enroll students into cohort |
+| `DELETE` | `/api/v1/batches/{id}/students/{studentId}` | `ADMIN` | Remove student enrollment |
+| `GET` | `/api/v1/batches/my-batch` | `STUDENT` | Get current student's enrolled batch |
+| `GET` | `/api/v1/students/profile` | `STUDENT` | Get personal academic profile & completeness score |
+| `PUT` | `/api/v1/students/profile` | `STUDENT` | Update degree, branch, CGPA, skills, social links |
+| `POST` | `/api/v1/students/profile/resume` | `STUDENT` | Upload resume document (PDF/DOCX max 5MB) |
+| `GET` | `/api/v1/students/profile/resume` | `STUDENT` | Download uploaded resume |
+| `GET` | `/api/v1/students/{studentId}/profile` | `ADMIN`, `TRAINER` | Inspect candidate student profile |
+
+---
+
 ## 📋 Roadmap & Phase Status
 - [x] **Phase 0 - Foundation**: Monorepo skeleton, Spring Boot modular monolith, Flyway baseline, React app shell with Student/Trainer/Admin portals, Docker Compose, CI, and OpenAPI client generation.
 - [x] **Phase 1 - Auth & RBAC**: Stateless JWT + refresh token rotation, password hashing, seeded admin, user creation, CSV bulk import, force-change-password, and audit log table.
-- [ ] **Phase 2 - Student Profile & Batches**: Batch CRUD, profile credentials, resume upload, and trainer-to-batch assignment.
+- [x] **Phase 2 - Student Profile & Batches**: Batch CRUD, cohort schedules, trainer assignment, student roster enrollments, profile credentials builder, skills chip tagger, resume upload/download (PDF/DOCX max 5MB), and live completeness meter.
 - [ ] **Phase 3 - Questions & Assignments**: Markdown question builder, sample & hidden test cases, assignments with deadlines.
 - [ ] **Phase 4 - Coding Practice & Execution**: Judge0 sandbox, Monaco editor, Run vs Submit verdicts.
 - [ ] **Phase 5 - Scoring & Engagement**: Asia/Kolkata streaks, GitHub activity heatmap, batch & global leaderboards.
