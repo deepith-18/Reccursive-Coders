@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # Primary Application Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: placement-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-placement_platform}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-placement_platform}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Judge0 Code Execution Stack (Profile: judge0)
+  judge0-server:
+    image: judge0/judge0:1.13.0
+    container_name: placement-judge0-server
+    profiles: ["judge0", "full"]
+    volumes:
+      - ./judge0/judge0.conf:/judge0.conf:ro
+    ports:
+      - "2358:2358"
+    privileged: true
+    environment:
+      - REDIS_URL=redis://judge0-redis:6379
+      - POSTGRES_SERVER=judge0-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    restart: always
+
+  judge0-workers:
+    image: judge0/judge0:1.13.0
+    container_name: placement-judge0-workers
+    profiles: ["judge0", "full"]
+    command: ["./scripts/workers"]
+    volumes:
+      - ./judge0/judge0.conf:/judge0.conf:ro
+    privileged: true
+    environment:
+      - REDIS_URL=redis://judge0-redis:6379
+      - POSTGRES_SERVER=judge0-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    restart: always
+
+  judge0-redis:
+    image: redis:7-alpine
+    container_name: placement-judge0-redis
+    profiles: ["judge0", "full"]
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
+
+  judge0-db:
+    image: postgres:16-alpine
+    container_name: placement-judge0-db
+    profiles: ["judge0", "full"]
+    environment:
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0
+    volumes:
+      - judge0_db_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:
+    driver: local
+  judge0_db_data:
+    driver: local
