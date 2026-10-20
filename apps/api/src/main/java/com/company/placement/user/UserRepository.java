@@ -27,4 +27,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             @Param("query") String query,
             Pageable pageable
     );
+
+    long countByRole(Role role);
 }

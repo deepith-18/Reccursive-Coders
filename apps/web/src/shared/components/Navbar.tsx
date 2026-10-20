@@ -14,10 +14,13 @@ import {
   Command,
   LayoutDashboard,
   Briefcase,
+  Bell,
+  CheckCheck,
 } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { useAuth } from '@/features/auth/AuthContext';
 import { RecursiveCodersLogo } from './RecursiveCodersLogo';
+import { notificationApi, NotificationResponse } from '@/api/notifications';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -29,6 +32,75 @@ export const Navbar: React.FC = () => {
       ? user.role.substring(5)
       : user.role
     : null;
+
+  const [notificationsOpen, setNotificationsOpen] = React.useState(false);
+  const [unreadCount, setUnreadCount] = React.useState(0);
+  const [notifications, setNotifications] = React.useState<NotificationResponse[]>([]);
+  const [isLoadingNotifications, setIsLoadingNotifications] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      loadUnreadCount();
+      const interval = setInterval(loadUnreadCount, 30000);
+      return () => clearInterval(interval);
+    }
+    return undefined;
+  }, [isAuthenticated]);
+
+  const loadUnreadCount = async () => {
+    try {
+      const count = await notificationApi.getUnreadCount();
+      setUnreadCount(count);
+    } catch {
+      // silent
+    }
+  };
+
+  const handleToggleNotifications = async () => {
+    const nextState = !notificationsOpen;
+    setNotificationsOpen(nextState);
+    if (nextState) {
+      setIsLoadingNotifications(true);
+      try {
+        const res = await notificationApi.getMyNotifications({ size: 10 });
+        if (res?.content) {
+          setNotifications(res.content);
+        }
+      } catch {
+        // silent
+      } finally {
+        setIsLoadingNotifications(false);
+      }
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await notificationApi.markAllAsRead();
+      setUnreadCount(0);
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    } catch {
+      // silent
+    }
+  };
+
+  const handleNotificationClick = async (notif: NotificationResponse) => {
+    if (!notif.read) {
+      try {
+        await notificationApi.markAsRead(notif.id);
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+        setNotifications((prev) =>
+          prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
+        );
+      } catch {
+        // silent
+      }
+    }
+    setNotificationsOpen(false);
+    if (notif.linkUrl) {
+      navigate(notif.linkUrl);
+    }
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -271,6 +343,91 @@ export const Navbar: React.FC = () => {
                   <StatusBadge status={role || 'USER'} />
                 </div>
                 <div className="text-[11px] text-zinc-400 font-mono">{user.email}</div>
+              </div>
+
+              {/* Notification Bell & Dropdown Tray */}
+              <div className="relative">
+                <button
+                  onClick={handleToggleNotifications}
+                  title="Notifications"
+                  className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.08] transition-all cursor-pointer relative"
+                >
+                  <Bell className="w-4 h-4 text-cyan-400" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-cyan-400 text-zinc-950 text-[10px] font-black flex items-center justify-center shadow-md animate-pulse">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {notificationsOpen && (
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl glass-card border border-white/[0.12] shadow-2xl p-4 z-[70] space-y-3 backdrop-blur-2xl">
+                    <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
+                      <div className="flex items-center gap-2">
+                        <Bell className="w-4 h-4 text-cyan-400" />
+                        <span className="text-xs font-bold text-white">Notifications</span>
+                        {unreadCount > 0 && (
+                          <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                            {unreadCount} new
+                          </span>
+                        )}
+                      </div>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={handleMarkAllRead}
+                          className="text-[11px] text-cyan-400 hover:text-cyan-300 font-semibold cursor-pointer flex items-center gap-1"
+                        >
+                          <CheckCheck className="w-3 h-3" />
+                          <span>Mark all read</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {isLoadingNotifications ? (
+                      <div className="py-6 text-center text-xs text-zinc-500">
+                        Loading notifications...
+                      </div>
+                    ) : notifications.length === 0 ? (
+                      <div className="py-6 text-center text-xs text-zinc-500">
+                        No notifications yet.
+                      </div>
+                    ) : (
+                      <div className="max-h-80 overflow-y-auto space-y-2 divide-y divide-white/[0.04]">
+                        {notifications.map((n) => (
+                          <div
+                            key={n.id}
+                            onClick={() => handleNotificationClick(n)}
+                            className={`pt-2 pb-1 px-2.5 rounded-xl transition cursor-pointer ${
+                              n.read
+                                ? 'opacity-65 hover:bg-white/[0.03]'
+                                : 'bg-cyan-950/20 border border-cyan-500/20 hover:bg-cyan-900/30'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <span className="text-xs font-bold text-white leading-tight">
+                                {n.title}
+                              </span>
+                              {!n.read && (
+                                <span className="w-2 h-2 rounded-full bg-cyan-400 shrink-0 mt-1" />
+                              )}
+                            </div>
+                            <p className="text-[11px] text-zinc-400 mt-1 line-clamp-2 leading-relaxed">
+                              {n.message}
+                            </p>
+                            <div className="text-[10px] text-zinc-500 mt-1.5 font-mono">
+                              {new Date(n.createdAt).toLocaleDateString([], {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <button

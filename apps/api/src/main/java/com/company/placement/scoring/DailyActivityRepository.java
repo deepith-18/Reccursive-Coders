@@ -20,4 +20,6 @@ public interface DailyActivityRepository extends JpaRepository<DailyActivity, UU
 
     @Query("SELECT da FROM DailyActivity da WHERE da.user.id = :userId AND da.activityDate >= :sinceDate ORDER BY da.activityDate ASC")
     List<DailyActivity> findRecentActivitiesForUser(@Param("userId") UUID userId, @Param("sinceDate") LocalDate sinceDate);
+
+    long countByActivityDate(LocalDate activityDate);
 }

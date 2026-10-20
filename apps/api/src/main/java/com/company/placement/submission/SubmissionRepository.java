@@ -22,4 +22,8 @@ public interface SubmissionRepository extends JpaRepository<Submission, UUID> {
     long countByUserIdAndVerdict(UUID userId, SubmissionVerdict verdict);
 
     boolean existsByUserIdAndQuestionIdAndVerdict(UUID userId, UUID questionId, SubmissionVerdict verdict);
+
+    long countByVerdict(SubmissionVerdict verdict);
+
+    long countByLanguage(com.company.placement.execution.ProgrammingLanguage language);
 }

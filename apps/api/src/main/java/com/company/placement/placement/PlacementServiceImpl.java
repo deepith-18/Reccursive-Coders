@@ -4,6 +4,8 @@ import com.company.placement.auth.UserPrincipal;
 import com.company.placement.common.exceptions.ApiException;
 import com.company.placement.common.exceptions.ResourceNotFoundException;
 import com.company.placement.placement.dto.*;
+import com.company.placement.notification.NotificationService;
+import com.company.placement.notification.NotificationType;
 import com.company.placement.user.Role;
 import com.company.placement.user.StudentProfile;
 import com.company.placement.user.StudentProfileRepository;
@@ -33,6 +35,7 @@ public class PlacementServiceImpl implements PlacementService {
     private final PlacementApplicationRepository applicationRepository;
     private final UserRepository userRepository;
     private final StudentProfileRepository studentProfileRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -169,6 +172,19 @@ public class PlacementServiceImpl implements PlacementService {
 
         PlacementApplication saved = applicationRepository.save(application);
         log.info("Student {} applied to drive {}", student.getEmail(), drive.getTitle());
+
+        try {
+            notificationService.sendNotification(
+                    student.getId(),
+                    "Application Submitted: " + drive.getCompanyName(),
+                    "Your application for " + drive.getTitle() + " (" + drive.getPackageCtcLpa() + " LPA) was successfully forwarded to recruiters.",
+                    NotificationType.PLACEMENT_UPDATE,
+                    "/student/placements"
+            );
+        } catch (Exception e) {
+            log.warn("Failed to dispatch application notification: {}", e.getMessage());
+        }
+
         return toApplicationResponse(saved, profile);
     }
 
@@ -206,6 +222,19 @@ public class PlacementServiceImpl implements PlacementService {
 
         PlacementApplication saved = applicationRepository.save(app);
         StudentProfile profile = studentProfileRepository.findByUserId(saved.getStudent().getId()).orElse(null);
+
+        try {
+            notificationService.sendNotification(
+                    saved.getStudent().getId(),
+                    "Application Update: " + saved.getDrive().getCompanyName(),
+                    "Status updated to " + request.getStatus() + (request.getRecruiterNotes() != null ? ": " + request.getRecruiterNotes() : ""),
+                    NotificationType.PLACEMENT_UPDATE,
+                    "/student/placements"
+            );
+        } catch (Exception e) {
+            log.warn("Failed to dispatch status update notification: {}", e.getMessage());
+        }
+
         return toApplicationResponse(saved, profile);
     }
 

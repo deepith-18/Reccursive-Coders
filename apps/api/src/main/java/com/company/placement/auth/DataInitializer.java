@@ -44,6 +44,7 @@ public class DataInitializer implements CommandLineRunner {
     private final AssignmentRepository assignmentRepository;
     private final AssignmentQuestionRepository assignmentQuestionRepository;
     private final com.company.placement.placement.PlacementDriveRepository placementDriveRepository;
+    private final com.company.placement.notification.NotificationRepository notificationRepository;
 
     @Override
     public void run(String... args) {
@@ -318,6 +319,38 @@ public class DataInitializer implements CommandLineRunner {
                     .build());
 
             log.info("Seeded 3 authentic placement recruitment drives.");
+        }
+
+        // 9. Seed Student Alerts & Notifications
+        if (notificationRepository.count() == 0) {
+            notificationRepository.save(com.company.placement.notification.Notification.builder()
+                    .userId(student.getId())
+                    .title("Welcome to Recursive Coders!")
+                    .message("Explore the coding arena, practice core DSA problems, and verify your profile.")
+                    .type(com.company.placement.notification.NotificationType.SYSTEM_ALERT)
+                    .linkUrl("/student/practice")
+                    .read(false)
+                    .build());
+
+            notificationRepository.save(com.company.placement.notification.Notification.builder()
+                    .userId(student.getId())
+                    .title("Amazon SDE-1 Drive Open (18.5 LPA)")
+                    .message("The Amazon campus placement drive is now accepting applications. Check eligibility criteria.")
+                    .type(com.company.placement.notification.NotificationType.PLACEMENT_UPDATE)
+                    .linkUrl("/student/placements")
+                    .read(false)
+                    .build());
+
+            notificationRepository.save(com.company.placement.notification.Notification.builder()
+                    .userId(student.getId())
+                    .title("Sprint 1 Assignment Available")
+                    .message("Assignment Sprint 1 has been scheduled for your cohort FS-2026-A.")
+                    .type(com.company.placement.notification.NotificationType.ASSIGNMENT_POSTED)
+                    .linkUrl("/student/assignments")
+                    .read(false)
+                    .build());
+
+            log.info("Seeded 3 authentic demo notifications for student.");
         }
 
         log.info("Demo dataset initialization completed successfully.");

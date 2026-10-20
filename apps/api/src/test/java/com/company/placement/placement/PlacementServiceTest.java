@@ -47,6 +47,9 @@ class PlacementServiceTest {
     @Mock
     private StudentProfileRepository studentProfileRepository;
 
+    @Mock
+    private com.company.placement.notification.NotificationService notificationService;
+
     @InjectMocks
     private PlacementServiceImpl placementService;
 

@@ -6,10 +6,15 @@ interface AuthContextType {
   accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isImpersonating: boolean;
+  impersonatedUser: UserResponse | null;
+  realAdminUser: UserResponse | null;
   login: (email: string, password: string) => Promise<UserResponse>;
   logout: () => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   refreshUserProfile: () => Promise<void>;
+  startImpersonation: (student: UserResponse) => void;
+  stopImpersonation: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -119,17 +124,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const [realAdminUser, setRealAdminUser] = useState<UserResponse | null>(() => {
+    const cachedAdmin = sessionStorage.getItem('realAdminUser');
+    return cachedAdmin ? JSON.parse(cachedAdmin) : null;
+  });
+
+  const [impersonatedUser, setImpersonatedUser] = useState<UserResponse | null>(() => {
+    const cachedImpersonated = sessionStorage.getItem('impersonatedUser');
+    return cachedImpersonated ? JSON.parse(cachedImpersonated) : null;
+  });
+
+  const startImpersonation = (student: UserResponse) => {
+    if (!user) return;
+    setRealAdminUser(user);
+    setImpersonatedUser(student);
+    sessionStorage.setItem('realAdminUser', JSON.stringify(user));
+    sessionStorage.setItem('impersonatedUser', JSON.stringify(student));
+  };
+
+  const stopImpersonation = () => {
+    setRealAdminUser(null);
+    setImpersonatedUser(null);
+    sessionStorage.removeItem('realAdminUser');
+    sessionStorage.removeItem('impersonatedUser');
+  };
+
+  // Active user represents the impersonated student if active, otherwise real logged-in user
+  const effectiveUser = impersonatedUser || user;
+  const isImpersonating = !!impersonatedUser;
+
   return (
     <AuthContext.Provider
       value={{
-        user,
+        user: effectiveUser,
         accessToken,
-        isAuthenticated: !!user && !!accessToken,
+        isAuthenticated: !!effectiveUser && !!accessToken,
         isLoading,
+        isImpersonating,
+        impersonatedUser,
+        realAdminUser,
         login,
         logout,
         changePassword,
         refreshUserProfile,
+        startImpersonation,
+        stopImpersonation,
       }}
     >
       {children}
