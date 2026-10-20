@@ -9,16 +9,16 @@ import type { SubmissionSummaryResponse } from './SubmissionSummaryResponse';
  * Payload data
  */
 export type PageSubmissionSummaryResponse = {
-    totalPages?: number;
     totalElements?: number;
+    totalPages?: number;
     size?: number;
     content?: Array<SubmissionSummaryResponse>;
     number?: number;
     sort?: Array<SortObject>;
     pageable?: PageableObject;
-    numberOfElements?: number;
-    last?: boolean;
     first?: boolean;
+    last?: boolean;
+    numberOfElements?: number;
     empty?: boolean;
 };
 

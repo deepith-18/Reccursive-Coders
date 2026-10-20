@@ -94,7 +94,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 🧪 Testing
 
-### Backend Unit & Integration Tests (22 tests)
+### Backend Unit & Integration Tests (27 tests)
 ```bash
 cd apps/api
 .\mvnw.cmd test
@@ -152,6 +152,16 @@ pnpm --filter @placement/web run build
 | `GET` | `/api/v1/submissions/my` | Authenticated | List user submission history with question & assignment filters |
 | `GET` | `/api/v1/submissions/{id}` | Authenticated | Get detailed submission breakdown with per-test-case verdicts |
 
+### Phase 5: Scoring & Engagement
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/v1/leaderboards/global` | Authenticated | Global leaderboard ranked by score, problems solved, and streaks |
+| `GET` | `/api/v1/leaderboards/batch/{batchId}` | Authenticated | Cohort batch leaderboard ranked by score, problems solved, and streaks |
+| `GET` | `/api/v1/scoring/heatmap` | Authenticated | Current student 365-day activity contribution heatmap (Asia/Kolkata) |
+| `GET` | `/api/v1/scoring/heatmap/{studentId}` | `ADMIN`, `TRAINER` | Inspect candidate student's activity contribution heatmap |
+| `GET` | `/api/v1/scoring/overview` | Authenticated | Current student global rank, total score, problems solved, and active streak |
+| `GET` | `/api/v1/scoring/overview/{studentId}` | `ADMIN`, `TRAINER` | Inspect candidate student's scoring rank and streak status |
+
 ---
 
 ## 📋 Roadmap & Phase Status
@@ -160,7 +170,7 @@ pnpm --filter @placement/web run build
 - [x] **Phase 2 - Student Profile & Batches**: Batch CRUD, cohort schedules, trainer assignment, student roster enrollments, profile credentials builder, skills chip tagger, resume upload/download (PDF/DOCX max 5MB), and live completeness meter.
 - [x] **Phase 3 - Questions & Assignments**: Markdown question builder, sample & hidden test cases, assignments with deadlines, urgency countdowns, and student problem viewers.
 - [x] **Phase 4 - Coding Practice & Execution**: Judge0 sandbox, Monaco editor, Run vs Submit verdicts, custom stdin console, and submission audit trail.
-- [ ] **Phase 5 - Scoring & Engagement**: Asia/Kolkata streaks, GitHub activity heatmap, batch & global leaderboards.
+- [x] **Phase 5 - Scoring & Engagement**: Asia/Kolkata streaks, GitHub activity heatmap, batch & global leaderboards with top 3 podium recognition.
 - [ ] **Phase 6 - Admin Power Features**: Read-only student impersonation, cohort progress analytics, and weak topics radar.
 - [ ] **Phase 7 - Placement Module**: Recruitment drives, eligibility criteria, and application pipelines.
 - [ ] **Phase 8 - Hardening & Deploy**: OWASP security review, rate limits, Testcontainers, and production Docker builds.

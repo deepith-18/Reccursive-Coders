@@ -60,4 +60,23 @@ public class StudentProfile extends BaseEntity {
 
     @Column(name = "resume_file_path", length = 500)
     private String resumeFilePath;
+
+    @Builder.Default
+    @Column(name = "total_score", nullable = false)
+    private Integer totalScore = 0;
+
+    @Builder.Default
+    @Column(name = "problems_solved", nullable = false)
+    private Integer problemsSolved = 0;
+
+    @Builder.Default
+    @Column(name = "current_streak", nullable = false)
+    private Integer currentStreak = 0;
+
+    @Builder.Default
+    @Column(name = "longest_streak", nullable = false)
+    private Integer longestStreak = 0;
+
+    @Column(name = "last_active_date")
+    private java.time.LocalDate lastActiveDate;
 }

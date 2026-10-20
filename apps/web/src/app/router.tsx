@@ -24,6 +24,9 @@ import { AdminUsersPage } from '@/features/admin/AdminUsersPage';
 import { AdminBatchesPage } from '@/features/admin/AdminBatchesPage';
 import { AdminImpersonationPage } from '@/features/admin/AdminImpersonationPage';
 
+// Leaderboard
+import { LeaderboardPage } from '@/features/leaderboard/LeaderboardPage';
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -49,6 +52,7 @@ export const router = createBrowserRouter([
           { index: true, element: <StudentDashboardPage /> },
           { path: 'practice', element: <StudentPracticePage /> },
           { path: 'assignments', element: <StudentAssignmentsPage /> },
+          { path: 'leaderboard', element: <LeaderboardPage /> },
           { path: 'profile', element: <StudentProfilePage /> },
         ],
       },
@@ -64,6 +68,7 @@ export const router = createBrowserRouter([
           { index: true, element: <TrainerDashboardPage /> },
           { path: 'batches', element: <TrainerBatchesPage /> },
           { path: 'questions', element: <TrainerQuestionBuilderPage /> },
+          { path: 'leaderboard', element: <LeaderboardPage /> },
         ],
       },
       // Admin Portal Routes (Guarded: ADMIN)
@@ -78,6 +83,7 @@ export const router = createBrowserRouter([
           { index: true, element: <AdminDashboardPage /> },
           { path: 'users', element: <AdminUsersPage /> },
           { path: 'batches', element: <AdminBatchesPage /> },
+          { path: 'leaderboard', element: <LeaderboardPage /> },
           { path: 'impersonate', element: <AdminImpersonationPage /> },
         ],
       },

@@ -58,6 +58,9 @@ class SubmissionServiceTest {
     @Mock
     private AuditLogService auditLogService;
 
+    @Mock
+    private com.company.placement.scoring.ScoringService scoringService;
+
     @InjectMocks
     private SubmissionServiceImpl submissionService;
 

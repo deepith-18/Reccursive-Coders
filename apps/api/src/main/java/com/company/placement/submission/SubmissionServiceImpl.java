@@ -108,7 +108,8 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         // Run against sample test cases
         List<TestCase> sampleCases = question.getTestCases() != null
-                ? question.getTestCases().stream().filter(tc -> Boolean.TRUE.equals(tc.getIsSample())).collect(Collectors.toList())
+                ? question.getTestCases().stream().filter(tc -> Boolean.TRUE.equals(tc.getIsSample()))
+                        .collect(Collectors.toList())
                 : List.of();
 
         if (sampleCases.isEmpty() && question.getTestCases() != null && !question.getTestCases().isEmpty()) {
@@ -161,7 +162,8 @@ public class SubmissionServiceImpl implements SubmissionService {
         }
 
         return RunCodeResponse.builder()
-                .overallVerdict(compileSuccess && passed == sampleCases.size() ? SubmissionVerdict.ACCEPTED : overallVerdict)
+                .overallVerdict(
+                        compileSuccess && passed == sampleCases.size() ? SubmissionVerdict.ACCEPTED : overallVerdict)
                 .compileSuccess(compileSuccess)
                 .compileOutput(compileOutput)
                 .totalSampleCases(sampleCases.size())
@@ -172,7 +174,8 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     @Transactional
-    public SubmitCodeResponse submitCode(SubmitCodeRequest request, UserPrincipal principal, HttpServletRequest httpRequest) {
+    public SubmitCodeResponse submitCode(SubmitCodeRequest request, UserPrincipal principal,
+            HttpServletRequest httpRequest) {
         if (principal == null) {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "Authentication required to submit code");
         }
@@ -195,7 +198,8 @@ public class SubmissionServiceImpl implements SubmissionService {
                 boolean enrolled = batchStudentRepository.existsByBatchIdAndStudentId(
                         assignment.getBatch().getId(), user.getId());
                 if (!enrolled) {
-                    throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "You are not enrolled in this assignment's cohort batch");
+                    throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN",
+                            "You are not enrolled in this assignment's cohort batch");
                 }
             }
 
@@ -277,7 +281,8 @@ public class SubmissionServiceImpl implements SubmissionService {
                     .build();
             dbResults.add(stc);
 
-            // Client DTO: For sample cases, show details. For hidden cases, mask inputs/outputs!
+            // Client DTO: For sample cases, show details. For hidden cases, mask
+            // inputs/outputs!
             boolean isSample = Boolean.TRUE.equals(tc.getIsSample());
             boolean maskDetails = !isSample && user.getRole() == Role.STUDENT;
 
@@ -287,7 +292,9 @@ public class SubmissionServiceImpl implements SubmissionService {
                     .status(v)
                     .input(maskDetails ? "(Hidden Test Case)" : tc.getInputData())
                     .expectedOutput(maskDetails ? "(Hidden Test Case)" : tc.getExpectedOutput())
-                    .actualOutput(maskDetails ? (v == SubmissionVerdict.ACCEPTED ? "(Output Passed)" : "(Hidden Output)") : exec.getStdout())
+                    .actualOutput(
+                            maskDetails ? (v == SubmissionVerdict.ACCEPTED ? "(Output Passed)" : "(Hidden Output)")
+                                    : exec.getStdout())
                     .stderr(exec.getStderr())
                     .executionTimeMs(exec.getExecutionTimeMs())
                     .memoryKb(exec.getMemoryKb())
@@ -340,13 +347,15 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<SubmissionSummaryResponse> getMySubmissions(UUID questionId, UserPrincipal principal, Pageable pageable) {
+    public Page<SubmissionSummaryResponse> getMySubmissions(UUID questionId, UserPrincipal principal,
+            Pageable pageable) {
         if (principal == null) {
             return Page.empty(pageable);
         }
 
         Page<Submission> page = (questionId != null)
-                ? submissionRepository.findByUserIdAndQuestionIdOrderByCreatedAtDesc(principal.getId(), questionId, pageable)
+                ? submissionRepository.findByUserIdAndQuestionIdOrderByCreatedAtDesc(principal.getId(), questionId,
+                        pageable)
                 : submissionRepository.findByUserIdOrderByCreatedAtDesc(principal.getId(), pageable);
 
         return page.map(this::mapToSummary);
@@ -378,21 +387,24 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     private SubmissionVerdict mapJudge0StatusToVerdict(Judge0Status status) {
-        if (status == null) return SubmissionVerdict.INTERNAL_ERROR;
+        if (status == null)
+            return SubmissionVerdict.INTERNAL_ERROR;
         return switch (status) {
             case ACCEPTED -> SubmissionVerdict.ACCEPTED;
             case WRONG_ANSWER -> SubmissionVerdict.WRONG_ANSWER;
             case TIME_LIMIT_EXCEEDED -> SubmissionVerdict.TIME_LIMIT_EXCEEDED;
             case COMPILATION_ERROR -> SubmissionVerdict.COMPILATION_ERROR;
             case RUNTIME_ERROR_SIGSEGV, RUNTIME_ERROR_SIGXFSZ, RUNTIME_ERROR_SIGFPE,
-                 RUNTIME_ERROR_SIGABRT, RUNTIME_ERROR_NZEC, RUNTIME_ERROR_OTHER,
-                 EXEC_FORMAT_ERROR -> SubmissionVerdict.RUNTIME_ERROR;
+                    RUNTIME_ERROR_SIGABRT, RUNTIME_ERROR_NZEC, RUNTIME_ERROR_OTHER,
+                    EXEC_FORMAT_ERROR ->
+                SubmissionVerdict.RUNTIME_ERROR;
             default -> SubmissionVerdict.INTERNAL_ERROR;
         };
     }
 
     private boolean matchesOutput(String actual, String expected) {
-        if (actual == null || expected == null) return false;
+        if (actual == null || expected == null)
+            return false;
         String a = actual.replaceAll("\r\n", "\n").trim();
         String e = expected.replaceAll("\r\n", "\n").trim();
         return a.equals(e);
@@ -425,8 +437,10 @@ public class SubmissionServiceImpl implements SubmissionService {
                     .testCaseNumber(stc.getOrderIndex() + 1)
                     .isSample(stc.getIsSample())
                     .status(stc.getStatus())
-                    .input(maskDetails ? "(Hidden Test Case)" : (stc.getTestCase() != null ? stc.getTestCase().getInputData() : null))
-                    .expectedOutput(maskDetails ? "(Hidden Test Case)" : (stc.getTestCase() != null ? stc.getTestCase().getExpectedOutput() : null))
+                    .input(maskDetails ? "(Hidden Test Case)"
+                            : (stc.getTestCase() != null ? stc.getTestCase().getInputData() : null))
+                    .expectedOutput(maskDetails ? "(Hidden Test Case)"
+                            : (stc.getTestCase() != null ? stc.getTestCase().getExpectedOutput() : null))
                     .actualOutput(maskDetails ? "(Output Hidden)" : stc.getStdout())
                     .stderr(stc.getStderr())
                     .executionTimeMs(stc.getExecutionTimeMs())
@@ -460,7 +474,8 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     private String getClientIp(HttpServletRequest request) {
-        if (request == null) return "127.0.0.1";
+        if (request == null)
+            return "127.0.0.1";
         String xfHeader = request.getHeader("X-Forwarded-For");
         if (xfHeader == null || xfHeader.isEmpty() || "unknown".equalsIgnoreCase(xfHeader)) {
             return request.getRemoteAddr();

@@ -9,16 +9,16 @@ import type { SortObject } from './SortObject';
  * Payload data
  */
 export type PageQuestionSummaryResponse = {
-    totalPages?: number;
     totalElements?: number;
+    totalPages?: number;
     size?: number;
     content?: Array<QuestionSummaryResponse>;
     number?: number;
     sort?: Array<SortObject>;
     pageable?: PageableObject;
-    numberOfElements?: number;
-    last?: boolean;
     first?: boolean;
+    last?: boolean;
+    numberOfElements?: number;
     empty?: boolean;
 };
 

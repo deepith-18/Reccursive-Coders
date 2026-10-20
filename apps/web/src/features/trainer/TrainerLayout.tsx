@@ -1,12 +1,13 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar, NavItem } from '@/shared/components/Sidebar';
-import { LayoutDashboard, Users, FilePlus } from 'lucide-react';
+import { LayoutDashboard, Users, FilePlus, Trophy } from 'lucide-react';
 
 const trainerNav: NavItem[] = [
   { label: 'Trainer Dashboard', to: '/trainer', icon: LayoutDashboard },
   { label: 'Batch Manager', to: '/trainer/batches', icon: Users, badge: 'Phase 2' },
   { label: 'Question Builder', to: '/trainer/questions', icon: FilePlus, badge: 'Phase 3' },
+  { label: 'Leaderboard', to: '/trainer/leaderboard', icon: Trophy, badge: 'Phase 5' },
 ];
 
 export const TrainerLayout: React.FC = () => {

@@ -76,3 +76,14 @@
   3. `Judge0Client` interacts with the Judge0 HTTP API with synchronous wait or polling. In offline/unreachable conditions (e.g., local tests or unstarted Docker daemon), it switches automatically to a deterministic simulated execution engine so test suites and developer workflows remain functional.
   4. The web client uses Monaco Editor with syntax highlighting, language selection (Python 3, Java, C++), dark IDE theming, sample case runner, custom input console, and submission history review.
 
+## ADR-0013: Scoring, Asia/Kolkata Streaks & Contribution Heatmap Architecture
+- **Date**: 2026-10-13
+- **Status**: Accepted
+- **Context**: Student engagement relies on daily streaks, GitHub-style activity contribution heatmaps, and competitive standings across both global student cohorts and assigned training batches. Because placement training operates in Indian Standard Time (IST, UTC+05:30), day rollover boundaries must strictly adhere to `Asia/Kolkata` midnight, rather than UTC midnight or browser client local time.
+- **Decision**:
+  1. Day boundaries are pinned to `ZoneId.of("Asia/Kolkata")` in backend services. `daily_activities` records each student's daily submissions, problems solved, and points earned indexed by `(user_id, activity_date)`.
+  2. Daily streak tracking checks consecutive IST dates. If a student solves on consecutive days (`today.minusDays(1)`), `current_streak` increments; if the gap exceeds 1 day, streak resets to 1. `longest_streak` is monotonically preserved.
+  3. The `GET /api/v1/scoring/heatmap` endpoint serves a contiguous 365-day array with 5 intensity levels (`0` to `4`) rendered using SVG/CSS grid cells with hover summaries.
+  4. Global (`GET /api/v1/leaderboards/global`) and batch-level (`GET /api/v1/leaderboards/batch/{batchId}`) leaderboards rank students by `totalScore DESC, problemsSolved DESC, longestStreak DESC`, displayed on the web client with a top 3 podium card view and detailed rankings table.
+
+
