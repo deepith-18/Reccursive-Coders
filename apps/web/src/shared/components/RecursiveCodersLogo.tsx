@@ -24,44 +24,13 @@ export const RecursiveCodersLogo: React.FC<RecursiveCodersLogoProps> = ({
 
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
-      {/* Official Emblem: Circular with stylized recursive double-chevron */}
-      <div
-        className={`${icon} rounded-full bg-black border border-white/20 flex items-center justify-center p-1 shadow-lg shrink-0 transition-transform duration-300 hover:scale-105`}
+      {/* Official Emblem: Exact authentic image from brand */}
+      <img
+        src="/recursive-coders-logo.png"
+        alt="Recursive Coders"
+        className={`${icon} rounded-full object-cover shrink-0 shadow-lg border border-white/20 transition-transform duration-300 hover:scale-105`}
         title="Recursive Coders"
-      >
-        <svg
-          viewBox="0 0 100 100"
-          className="w-full h-full"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Outer circle with break on the right */}
-          <path
-            d="M 66 24 A 38 38 0 1 0 66 76"
-            stroke="white"
-            strokeWidth="9"
-            strokeLinecap="round"
-          />
-          {/* Main recursive inner chevron/spiral pointing left */}
-          <path
-            d="M 64 34 L 40 50 L 64 66"
-            stroke="white"
-            strokeWidth="9"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Inner recursive nested loop */}
-          <path
-            d="M 52 42 L 44 50 L 52 58"
-            stroke="#a78bfa"
-            strokeWidth="5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Recursive core node */}
-          <circle cx="50" cy="50" r="2.5" fill="#22d3ee" />
-        </svg>
-      </div>
+      />
 
       {/* Typography: Matching official branding */}
       {showText && (
