@@ -11,14 +11,10 @@ import {
   Clock,
   Cpu,
   BookOpen,
-  X,
   Loader2,
   CheckCircle2,
-  Terminal,
-  Copy,
-  Check,
 } from 'lucide-react';
-import { MarkdownRenderer } from '@/shared/components/MarkdownRenderer';
+import { CodingWorkspace } from './CodingWorkspace';
 
 export const StudentPracticePage: React.FC = () => {
   const [questions, setQuestions] = useState<QuestionSummaryResponse[]>([]);
@@ -26,10 +22,8 @@ export const StudentPracticePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('ALL');
 
-  // Selected Problem Drawer / Modal
+  // Selected Problem Workspace
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionResponse | null>(null);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [selectedLang, setSelectedLang] = useState<'java' | 'python' | 'cpp'>('python');
 
   const fetchQuestions = async () => {
     setIsLoading(true);
@@ -64,12 +58,6 @@ export const StudentPracticePage: React.FC = () => {
     } catch (err) {
       console.error('Failed to load problem details', err);
     }
-  };
-
-  const copyToClipboard = (text: string, index: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   const getDifficultyBadge = (diff: QuestionDifficulty) => {
@@ -201,148 +189,12 @@ export const StudentPracticePage: React.FC = () => {
         </div>
       )}
 
-      {/* PROBLEM DETAILS DRAWER / MODAL */}
+      {/* FULL SCREEN / IMMERSIVE CODING WORKSPACE */}
       {selectedQuestion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-card border border-white/15 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-            {/* Header */}
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-muted/40">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getDifficultyBadge(
-                    selectedQuestion.difficulty
-                  )}`}
-                >
-                  {selectedQuestion.difficulty}
-                </span>
-                <h2 className="text-lg font-bold text-white">{selectedQuestion.title}</h2>
-              </div>
-              <button
-                onClick={() => setSelectedQuestion(null)}
-                className="text-muted-foreground hover:text-white transition"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Body */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {/* Resource Limits info */}
-              <div className="flex flex-wrap items-center gap-4 text-xs bg-muted/20 p-3 rounded-lg border border-white/10">
-                <span className="flex items-center gap-1 text-slate-300">
-                  <Clock className="w-3.5 h-3.5 text-primary-400" />
-                  Time Limit: {selectedQuestion.timeLimitMs}ms
-                </span>
-                <span className="flex items-center gap-1 text-slate-300">
-                  <Cpu className="w-3.5 h-3.5 text-primary-400" />
-                  Memory Limit: {selectedQuestion.memoryLimitMb}MB
-                </span>
-                {selectedQuestion.tags && (
-                  <span className="text-slate-400">
-                    Topics: <strong className="text-slate-200">{selectedQuestion.tags}</strong>
-                  </span>
-                )}
-              </div>
-
-              {/* Rendered Description */}
-              <div className="prose-invert">
-                <MarkdownRenderer content={selectedQuestion.description} />
-              </div>
-
-              {/* Sample Test Cases (Hidden cases are masked by backend) */}
-              {selectedQuestion.testCases && selectedQuestion.testCases.length > 0 && (
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-primary-400" />
-                    Sample Test Cases
-                  </h3>
-                  {selectedQuestion.testCases.map((tc, idx) => (
-                    <div
-                      key={idx}
-                      className="p-4 rounded-xl bg-background/80 border border-white/10 space-y-3"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-emerald-400">Example {idx + 1}</span>
-                        <button
-                          onClick={() => copyToClipboard(tc.inputData, idx)}
-                          className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-white transition"
-                        >
-                          {copiedIndex === idx ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-emerald-400" /> Copied
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5" /> Copy Input
-                            </>
-                          )}
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                        <div>
-                          <span className="text-muted-foreground font-semibold block mb-1">Input:</span>
-                          <pre className="p-2.5 rounded bg-black/60 font-mono text-slate-200 whitespace-pre-wrap border border-white/5">
-                            {tc.inputData}
-                          </pre>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground font-semibold block mb-1">Expected Output:</span>
-                          <pre className="p-2.5 rounded bg-black/60 font-mono text-slate-200 whitespace-pre-wrap border border-white/5">
-                            {tc.expectedOutput}
-                          </pre>
-                        </div>
-                      </div>
-
-                      {tc.explanation && (
-                        <p className="text-xs text-muted-foreground italic border-t border-white/5 pt-2">
-                          <strong className="text-slate-300 not-italic">Explanation:</strong> {tc.explanation}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Starter Code Templates Preview */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                    <Code className="w-4 h-4 text-primary-400" />
-                    Starter Code
-                  </h3>
-                  <div className="flex items-center gap-1 bg-background p-1 rounded-lg border border-white/10 text-xs">
-                    {(['python', 'java', 'cpp'] as const).map((lang) => (
-                      <button
-                        key={lang}
-                        onClick={() => setSelectedLang(lang)}
-                        className={`px-2.5 py-1 rounded font-medium transition uppercase cursor-pointer ${
-                          selectedLang === lang
-                            ? 'bg-primary text-primary-foreground font-bold'
-                            : 'text-muted-foreground hover:text-white'
-                        }`}
-                      >
-                        {lang}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-white/10 bg-slate-950 p-4 font-mono text-xs overflow-x-auto text-slate-200">
-                  <pre>
-                    <code>
-                      {selectedLang === 'python'
-                        ? selectedQuestion.starterCodePython || '# No Python starter code'
-                        : selectedLang === 'java'
-                        ? selectedQuestion.starterCodeJava || '// No Java starter code'
-                        : selectedQuestion.starterCodeCpp || '// No C++ starter code'}
-                    </code>
-                  </pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CodingWorkspace
+          question={selectedQuestion}
+          onClose={() => setSelectedQuestion(null)}
+        />
       )}
     </div>
   );

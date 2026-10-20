@@ -65,3 +65,14 @@
 - **Status**: Accepted
 - **Context**: Trainers need to assign problem sets to cohort batches with deadlines, point values, and automatic urgency tracking. Students should only access assignments assigned to their enrolled cohorts.
 - **Decision**: Modeled with `assignments` linked to `batches`, and an `assignment_questions` mapping table tracking individual question point allocations. Student assignment access enforces cohort enrollment verification via `batch_students`. Real-time deadline evaluation computes `isPastDue` and urgency badges dynamically on read.
+
+## ADR-0012: Code Execution Architecture, Judge0 Integration & Fallback Simulation
+- **Date**: 2026-10-12
+- **Status**: Accepted
+- **Context**: Students need to run code against sample inputs or custom test data without saving a permanent submission record (`RUN`), and formally submit code against the full private test case suite (`SUBMIT`) to compute verdicts (`ACCEPTED`, `WRONG_ANSWER`, `TIME_LIMIT_EXCEEDED`, `COMPILATION_ERROR`, etc.) and assignment scores. Additionally, local developer environments without Docker/Judge0 services running must not crash or fail unit tests.
+- **Decision**:
+  1. The API exposes `POST /api/v1/submissions/run` for non-persisted test executions against sample cases or custom stdin, returning stdout, stderr, compile errors, execution time, and memory usage.
+  2. The API exposes `POST /api/v1/submissions/submit` for persisted submissions recorded in `submissions` and `submission_test_case_results`, testing against all hidden and sample test cases.
+  3. `Judge0Client` interacts with the Judge0 HTTP API with synchronous wait or polling. In offline/unreachable conditions (e.g., local tests or unstarted Docker daemon), it switches automatically to a deterministic simulated execution engine so test suites and developer workflows remain functional.
+  4. The web client uses Monaco Editor with syntax highlighting, language selection (Python 3, Java, C++), dark IDE theming, sample case runner, custom input console, and submission history review.
+

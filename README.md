@@ -94,7 +94,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 🧪 Testing
 
-### Backend Unit & Integration Tests (16 tests)
+### Backend Unit & Integration Tests (22 tests)
 ```bash
 cd apps/api
 .\mvnw.cmd test
@@ -144,6 +144,14 @@ pnpm --filter @placement/web run build
 | `PUT` | `/api/v1/assignments/{id}` | `ADMIN`, `TRAINER` | Update assignment details and question points |
 | `DELETE` | `/api/v1/assignments/{id}` | `ADMIN`, `TRAINER` | Delete batch assignment |
 
+### Phase 4: Coding Practice & Execution
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/submissions/run` | Authenticated | Execute code against sample cases or custom stdin (sandbox execution) |
+| `POST` | `/api/v1/submissions/submit` | Authenticated | Formally submit code against full test suite, persist verdict & score |
+| `GET` | `/api/v1/submissions/my` | Authenticated | List user submission history with question & assignment filters |
+| `GET` | `/api/v1/submissions/{id}` | Authenticated | Get detailed submission breakdown with per-test-case verdicts |
+
 ---
 
 ## 📋 Roadmap & Phase Status
@@ -151,8 +159,9 @@ pnpm --filter @placement/web run build
 - [x] **Phase 1 - Auth & RBAC**: Stateless JWT + refresh token rotation, password hashing, seeded admin, user creation, CSV bulk import, force-change-password, and audit log table.
 - [x] **Phase 2 - Student Profile & Batches**: Batch CRUD, cohort schedules, trainer assignment, student roster enrollments, profile credentials builder, skills chip tagger, resume upload/download (PDF/DOCX max 5MB), and live completeness meter.
 - [x] **Phase 3 - Questions & Assignments**: Markdown question builder, sample & hidden test cases, assignments with deadlines, urgency countdowns, and student problem viewers.
-- [ ] **Phase 4 - Coding Practice & Execution**: Judge0 sandbox, Monaco editor, Run vs Submit verdicts.
+- [x] **Phase 4 - Coding Practice & Execution**: Judge0 sandbox, Monaco editor, Run vs Submit verdicts, custom stdin console, and submission audit trail.
 - [ ] **Phase 5 - Scoring & Engagement**: Asia/Kolkata streaks, GitHub activity heatmap, batch & global leaderboards.
 - [ ] **Phase 6 - Admin Power Features**: Read-only student impersonation, cohort progress analytics, and weak topics radar.
 - [ ] **Phase 7 - Placement Module**: Recruitment drives, eligibility criteria, and application pipelines.
 - [ ] **Phase 8 - Hardening & Deploy**: OWASP security review, rate limits, Testcontainers, and production Docker builds.
+

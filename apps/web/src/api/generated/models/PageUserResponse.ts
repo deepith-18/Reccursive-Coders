@@ -9,16 +9,16 @@ import type { UserResponse } from './UserResponse';
  * Payload data
  */
 export type PageUserResponse = {
-    totalElements?: number;
     totalPages?: number;
+    totalElements?: number;
     size?: number;
     content?: Array<UserResponse>;
     number?: number;
     sort?: Array<SortObject>;
-    numberOfElements?: number;
-    first?: boolean;
     pageable?: PageableObject;
+    numberOfElements?: number;
     last?: boolean;
+    first?: boolean;
     empty?: boolean;
 };
 

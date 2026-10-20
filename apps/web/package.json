@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
+    "@monaco-editor/react": "^4.7.0",
     "@placement/ui": "workspace:*",
     "@tanstack/react-query": "^5.66.0",
     "axios": "^1.7.9",

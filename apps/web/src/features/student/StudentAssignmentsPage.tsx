@@ -8,15 +8,13 @@ import { questionApi, QuestionResponse, QuestionDifficulty } from '@/api/questio
 import {
   FileText,
   Calendar,
-  Clock,
-  Cpu,
   Award,
   X,
   Loader2,
   ChevronRight,
   Code,
 } from 'lucide-react';
-import { MarkdownRenderer } from '@/shared/components/MarkdownRenderer';
+import { CodingWorkspace } from './CodingWorkspace';
 
 export const StudentAssignmentsPage: React.FC = () => {
   const [assignments, setAssignments] = useState<AssignmentSummaryResponse[]>([]);
@@ -293,82 +291,13 @@ export const StudentAssignmentsPage: React.FC = () => {
         </div>
       )}
 
-      {/* PROBLEM MODAL INSIDE ASSIGNMENT */}
+      {/* IMMERSIVE CODING WORKSPACE FOR ASSIGNED PROBLEM */}
       {viewingQuestion && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-card border border-white/15 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-            {/* Header */}
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-muted/40">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getDifficultyBadge(
-                    viewingQuestion.difficulty
-                  )}`}
-                >
-                  {viewingQuestion.difficulty}
-                </span>
-                <h3 className="text-base font-bold text-white">{viewingQuestion.title}</h3>
-              </div>
-              <button
-                onClick={() => setViewingQuestion(null)}
-                className="text-muted-foreground hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              <div className="flex items-center gap-4 text-xs bg-muted/20 p-3 rounded-lg border border-white/10">
-                <span className="flex items-center gap-1 text-slate-300">
-                  <Clock className="w-3.5 h-3.5 text-primary-400" />
-                  Time Limit: {viewingQuestion.timeLimitMs}ms
-                </span>
-                <span className="flex items-center gap-1 text-slate-300">
-                  <Cpu className="w-3.5 h-3.5 text-primary-400" />
-                  Memory Limit: {viewingQuestion.memoryLimitMb}MB
-                </span>
-              </div>
-
-              <div>
-                <MarkdownRenderer content={viewingQuestion.description} />
-              </div>
-
-              {/* Sample cases */}
-              {viewingQuestion.testCases && viewingQuestion.testCases.length > 0 && (
-                <div className="space-y-3">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-                    Sample Test Cases
-                  </h4>
-                  {viewingQuestion.testCases.map((tc, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl bg-background/80 border border-white/10 space-y-2">
-                      <span className="text-xs font-bold text-emerald-400">Example {idx + 1}</span>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                        <div>
-                          <span className="text-muted-foreground font-semibold">Input:</span>
-                          <pre className="p-2 rounded bg-black/40 font-mono text-slate-200 mt-1 whitespace-pre-wrap">
-                            {tc.inputData}
-                          </pre>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground font-semibold">Output:</span>
-                          <pre className="p-2 rounded bg-black/40 font-mono text-slate-200 mt-1 whitespace-pre-wrap">
-                            {tc.expectedOutput}
-                          </pre>
-                        </div>
-                      </div>
-                      {tc.explanation && (
-                        <p className="text-xs text-muted-foreground italic">
-                          Explanation: {tc.explanation}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <CodingWorkspace
+          question={viewingQuestion}
+          assignmentId={selectedAssignment?.id}
+          onClose={() => setViewingQuestion(null)}
+        />
       )}
     </div>
   );

@@ -59,3 +59,7 @@ app:
     secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
     access-token-expiration-ms: 900000 # 15 minutes
     refresh-token-expiration-ms: 604800000 # 7 days
+  judge0:
+    base-url: ${JUDGE0_URL:http://localhost:2358}
+    api-key: ${JUDGE0_API_KEY:}
+
