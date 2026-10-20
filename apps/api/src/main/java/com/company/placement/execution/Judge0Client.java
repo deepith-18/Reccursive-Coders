@@ -153,7 +153,7 @@ public class Judge0Client {
             if (exitCode != 0) {
                 boolean isCompile = stderr.contains("SyntaxError") || stderr.contains("IndentationError");
                 return CodeExecutionResult.builder()
-                        .status(isCompile ? Judge0Status.COMPILATION_ERROR : Judge0Status.RUNTIME_ERROR)
+                        .status(isCompile ? Judge0Status.COMPILATION_ERROR : Judge0Status.RUNTIME_ERROR_OTHER)
                         .passed(false)
                         .stdout(stdout)
                         .stderr(stderr)
@@ -252,7 +252,7 @@ public class Judge0Client {
 
             if (exitCode != 0) {
                 return CodeExecutionResult.builder()
-                        .status(Judge0Status.RUNTIME_ERROR)
+                        .status(Judge0Status.RUNTIME_ERROR_OTHER)
                         .passed(false)
                         .stdout(stdout)
                         .stderr(stderr)
