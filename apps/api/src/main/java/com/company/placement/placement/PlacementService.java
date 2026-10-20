@@ -18,6 +18,8 @@ public interface PlacementService {
 
     PlacementDriveResponse updateDrive(UUID driveId, CreatePlacementDriveRequest request);
 
+    void deleteDrive(UUID driveId);
+
     PlacementApplicationResponse applyToDrive(UUID driveId, UserPrincipal principal);
 
     List<PlacementApplicationResponse> getMyApplications(UserPrincipal principal);

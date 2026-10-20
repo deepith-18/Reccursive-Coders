@@ -75,6 +75,14 @@ public class PlacementController {
         return ResponseEntity.ok(ApiResponse.ok("Placement drive updated successfully", response));
     }
 
+    @DeleteMapping("/drives/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
+    @Operation(summary = "Delete an existing placement drive (ADMIN / TRAINER)")
+    public ResponseEntity<ApiResponse<Void>> deleteDrive(@PathVariable UUID id) {
+        placementService.deleteDrive(id);
+        return ResponseEntity.ok(ApiResponse.ok("Placement drive deleted successfully", null));
+    }
+
     @PostMapping("/drives/{id}/apply")
     @PreAuthorize("hasRole('STUDENT')")
     @Operation(summary = "Apply to a placement drive (STUDENT)")

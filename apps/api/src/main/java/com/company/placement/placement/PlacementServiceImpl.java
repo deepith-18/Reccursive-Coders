@@ -121,6 +121,14 @@ public class PlacementServiceImpl implements PlacementService {
 
     @Override
     @Transactional
+    public void deleteDrive(UUID driveId) {
+        PlacementDrive drive = driveRepository.findById(driveId)
+                .orElseThrow(() -> new ResourceNotFoundException("PlacementDrive", "id", driveId));
+        driveRepository.delete(drive);
+    }
+
+    @Override
+    @Transactional
     public PlacementApplicationResponse applyToDrive(UUID driveId, UserPrincipal principal) {
         if (principal == null || principal.getRole() != Role.STUDENT) {
             throw new ApiException(HttpStatus.FORBIDDEN, "FORBIDDEN", "Only students can apply to placement drives");

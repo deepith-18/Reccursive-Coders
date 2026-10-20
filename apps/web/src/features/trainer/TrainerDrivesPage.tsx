@@ -5,6 +5,7 @@ import {
   PlacementApplicationResponse,
   CreatePlacementDriveRequest,
   ApplicationStatus,
+  DriveStatus,
 } from '@/api/placements';
 import {
   Briefcase,
@@ -12,6 +13,10 @@ import {
   Users,
   X,
   Loader2,
+  Pencil,
+  Trash2,
+  AlertTriangle,
+  CheckCircle2,
 } from 'lucide-react';
 
 export const TrainerDrivesPage: React.FC = () => {
@@ -20,13 +25,17 @@ export const TrainerDrivesPage: React.FC = () => {
   const [applications, setApplications] = useState<PlacementApplicationResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingApps, setIsLoadingApps] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDriveModalOpen, setIsDriveModalOpen] = useState(false);
+  const [editingDriveId, setEditingDriveId] = useState<string | null>(null);
   const [statusUpdateAppId, setStatusUpdateAppId] = useState<string | null>(null);
   const [selectedNewStatus, setSelectedNewStatus] = useState<ApplicationStatus>('SHORTLISTED');
   const [recruiterNotes, setRecruiterNotes] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [driveToDelete, setDriveToDelete] = useState<PlacementDriveResponse | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Form state
-  const [formData, setFormData] = useState<CreatePlacementDriveRequest>({
+  // Form state for Create & Edit
+  const defaultFormData: CreatePlacementDriveRequest = {
     title: '',
     companyName: '',
     companyLogoUrl: '',
@@ -38,8 +47,11 @@ export const TrainerDrivesPage: React.FC = () => {
     eligibleBranches: 'CSE, ISE, ECE, MCA',
     minCodingScore: 50,
     applicationDeadline: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0] ?? '',
+    status: 'OPEN',
     openingsCount: 10,
-  });
+  };
+
+  const [formData, setFormData] = useState<CreatePlacementDriveRequest>(defaultFormData);
 
   useEffect(() => {
     loadDrives();
@@ -51,9 +63,16 @@ export const TrainerDrivesPage: React.FC = () => {
       const res = await placementApi.getAllDrives({ size: 50 });
       if (res?.content) {
         setDrives(res.content);
-        const first = res.content[0];
-        if (first && !selectedDrive) {
-          viewDriveApplicants(first);
+        if (res.content.length > 0) {
+          // If previously selected drive is still present, refresh it; otherwise select first
+          const current = selectedDrive ? res.content.find((d) => d.id === selectedDrive.id) : null;
+          const target = current || res.content[0];
+          if (target) {
+            viewDriveApplicants(target);
+          }
+        } else {
+          setSelectedDrive(null);
+          setApplications([]);
         }
       }
     } catch (e) {
@@ -78,18 +97,74 @@ export const TrainerDrivesPage: React.FC = () => {
     }
   };
 
-  const handleCreateDrive = async (e: React.FormEvent) => {
+  const handleOpenCreateModal = () => {
+    setEditingDriveId(null);
+    setFormData(defaultFormData);
+    setIsDriveModalOpen(true);
+  };
+
+  const handleOpenEditModal = (drive: PlacementDriveResponse, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setEditingDriveId(drive.id);
+    setFormData({
+      title: drive.title,
+      companyName: drive.companyName,
+      companyLogoUrl: drive.companyLogoUrl || '',
+      jobRole: drive.jobRole,
+      description: drive.description,
+      packageCtcLpa: drive.packageCtcLpa,
+      location: drive.location || 'Bengaluru, India',
+      minCgpa: drive.minCgpa || 7.0,
+      eligibleBranches: drive.eligibleBranches || 'CSE, ISE, ECE, MCA',
+      minCodingScore: drive.minCodingScore || 50,
+      applicationDeadline: drive.applicationDeadline ? (drive.applicationDeadline.split('T')[0] ?? '') : '',
+      status: drive.status || 'OPEN',
+      openingsCount: drive.openingsCount || 10,
+    });
+    setIsDriveModalOpen(true);
+  };
+
+  const handleSaveDrive = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
-      await placementApi.createDrive({
+      const payload: CreatePlacementDriveRequest = {
         ...formData,
         packageCtcLpa: Number(formData.packageCtcLpa),
         applicationDeadline: new Date(formData.applicationDeadline).toISOString(),
-      });
-      setIsCreateModalOpen(false);
+      };
+
+      if (editingDriveId) {
+        await placementApi.updateDrive(editingDriveId, payload);
+      } else {
+        await placementApi.createDrive(payload);
+      }
+
+      setIsDriveModalOpen(false);
+      setEditingDriveId(null);
       await loadDrives();
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to create drive');
+      alert(err.response?.data?.message || (editingDriveId ? 'Failed to update drive' : 'Failed to create drive'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteDrive = async () => {
+    if (!driveToDelete) return;
+    setIsDeleting(true);
+    try {
+      await placementApi.deleteDrive(driveToDelete.id);
+      setDriveToDelete(null);
+      if (selectedDrive?.id === driveToDelete.id) {
+        setSelectedDrive(null);
+        setApplications([]);
+      }
+      await loadDrives();
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to delete placement drive');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -125,6 +200,23 @@ export const TrainerDrivesPage: React.FC = () => {
     }
   };
 
+  const getDriveStatusBadge = (status: DriveStatus) => {
+    switch (status) {
+      case 'OPEN':
+        return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+      case 'UPCOMING':
+        return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
+      case 'IN_PROGRESS':
+        return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+      case 'COMPLETED':
+        return 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30';
+      case 'CANCELLED':
+        return 'bg-rose-500/20 text-rose-400 border-rose-500/30';
+      default:
+        return 'bg-violet-500/20 text-violet-300 border-violet-500/30';
+    }
+  };
+
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-16">
       {/* Header */}
@@ -134,19 +226,20 @@ export const TrainerDrivesPage: React.FC = () => {
             Placement Recruitment Drives
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Author company placement drives, review candidate rosters, and track student hiring progress.
+            Author and manage company placement drives, edit requirements, review candidate rosters, and track student hiring progress.
           </p>
         </div>
 
         <button
-          onClick={() => setIsCreateModalOpen(true)}
+          onClick={handleOpenCreateModal}
           className="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs shadow-lg shadow-violet-600/30 cursor-pointer transition flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
-          <span>Create Placement Drive</span>
+          <span>New Placement Drive</span>
         </button>
       </div>
 
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Drives List Column */}
         <div className="space-y-4">
@@ -167,30 +260,58 @@ export const TrainerDrivesPage: React.FC = () => {
               </div>
             ) : (
               drives.map((d) => (
-              <div
-                key={d.id}
-                onClick={() => viewDriveApplicants(d)}
-                className={`p-4 rounded-2xl glass-card cursor-pointer transition-all border ${
-                  selectedDrive?.id === d.id
-                    ? 'border-violet-500/60 bg-violet-950/20 shadow-lg'
-                    : 'border-white/[0.06] hover:border-white/[0.15]'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="font-bold text-white text-sm">{d.companyName}</div>
-                  <span className="text-xs font-black text-emerald-400">{d.packageCtcLpa} LPA</span>
+                <div
+                  key={d.id}
+                  onClick={() => viewDriveApplicants(d)}
+                  className={`p-4 rounded-2xl glass-card cursor-pointer transition-all border group relative ${
+                    selectedDrive?.id === d.id
+                      ? 'border-violet-500/60 bg-violet-950/20 shadow-lg'
+                      : 'border-white/[0.06] hover:border-white/[0.15]'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-white text-sm truncate">{d.companyName}</div>
+                      <div className="text-xs text-zinc-300 truncate mt-0.5">{d.jobRole}</div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs font-black text-emerald-400">{d.packageCtcLpa} LPA</span>
+                      <div className="mt-1">
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border uppercase ${getDriveStatusBadge(d.status)}`}>
+                          {d.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 mt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-500">
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3.5 h-3.5" />
+                      <span>{d.applicantCount} Applicants</span>
+                    </span>
+                    <div className="flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition">
+                      <button
+                        title="Edit Drive"
+                        onClick={(e) => handleOpenEditModal(d, e)}
+                        className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-white/10 transition"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        title="Delete Drive"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDriveToDelete(d);
+                        }}
+                        className="p-1 rounded-md text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-xs text-zinc-300 mt-1">{d.jobRole}</div>
-                <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-500">
-                  <span className="flex items-center gap-1">
-                    <Users className="w-3.5 h-3.5" />
-                    <span>{d.applicantCount} Applicants</span>
-                  </span>
-                  <span>Due {new Date(d.applicationDeadline).toLocaleDateString()}</span>
-                </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
           </div>
         </div>
 
@@ -199,15 +320,44 @@ export const TrainerDrivesPage: React.FC = () => {
           {selectedDrive ? (
             <div className="p-6 rounded-3xl glass-card space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
-                <div>
-                  <h2 className="text-lg font-bold text-white">{selectedDrive.title}</h2>
-                  <div className="text-xs text-zinc-400 mt-0.5">
-                    {selectedDrive.companyName} &bull; {selectedDrive.jobRole} &bull; Package: {selectedDrive.packageCtcLpa} LPA
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h2 className="text-lg font-bold text-white truncate">{selectedDrive.title}</h2>
+                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border uppercase ${getDriveStatusBadge(selectedDrive.status)}`}>
+                      {selectedDrive.status}
+                    </span>
+                  </div>
+                  <div className="text-xs text-zinc-400 flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="text-white font-semibold">{selectedDrive.companyName}</span>
+                    <span>&bull;</span>
+                    <span>{selectedDrive.jobRole}</span>
+                    <span>&bull;</span>
+                    <span className="text-emerald-400 font-bold">{selectedDrive.packageCtcLpa} LPA</span>
+                    <span>&bull;</span>
+                    <span>Min CGPA: {selectedDrive.minCgpa || 'N/A'}</span>
+                    <span>&bull;</span>
+                    <span>Deadline: {new Date(selectedDrive.applicationDeadline).toLocaleDateString()}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => handleOpenEditModal(selectedDrive)}
+                    className="px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-zinc-300 hover:text-white border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                    <span>Edit</span>
+                  </button>
+
+                  <button
+                    onClick={() => setDriveToDelete(selectedDrive)}
+                    className="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 border border-rose-500/20 text-xs font-semibold flex items-center gap-1.5 transition"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Delete</span>
+                  </button>
+
+                  <span className="px-3 py-1.5 rounded-xl text-xs font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30">
                     {applications.length} Candidates
                   </span>
                 </div>
@@ -254,7 +404,7 @@ export const TrainerDrivesPage: React.FC = () => {
                                 app.status
                               )}`}
                             >
-                              {app.status.replace('_', ' ')}
+                              {app.status.replace(/_/g, ' ')}
                             </span>
                           </td>
                           <td className="py-3.5 text-right">
@@ -277,11 +427,52 @@ export const TrainerDrivesPage: React.FC = () => {
             </div>
           ) : (
             <div className="p-12 text-center glass-card rounded-3xl">
-              <p className="text-xs text-zinc-400">Select a placement drive on the left to view candidates.</p>
+              <p className="text-xs text-zinc-400">Select a placement drive on the left to view candidates or manage details.</p>
             </div>
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {driveToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+          <div className="w-full max-w-md bg-[#12131a] border border-rose-500/20 rounded-3xl p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center gap-3 text-rose-400">
+              <div className="p-2.5 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white">Delete Placement Drive?</h3>
+                <p className="text-xs text-zinc-400">This action cannot be undone.</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-zinc-300 leading-relaxed">
+              Are you sure you want to delete <span className="font-bold text-white">{driveToDelete.title}</span> ({driveToDelete.companyName})? All associated student applications and interview stages will be permanently removed.
+            </p>
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-white/[0.06]">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setDriveToDelete(null)}
+                className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={handleDeleteDrive}
+                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-lg shadow-rose-600/30"
+              >
+                {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                <span>Delete Drive</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Status Update Modal */}
       {statusUpdateAppId && (
@@ -343,21 +534,21 @@ export const TrainerDrivesPage: React.FC = () => {
         </div>
       )}
 
-      {/* Create Placement Drive Modal */}
-      {isCreateModalOpen && (
+      {/* Create / Edit Placement Drive Modal */}
+      {isDriveModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
           <form
-            onSubmit={handleCreateDrive}
+            onSubmit={handleSaveDrive}
             className="w-full max-w-xl bg-[#12131a] border border-white/10 rounded-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
                 <Briefcase className="w-5 h-5 text-violet-400" />
-                <span>Create Placement Recruitment Drive</span>
+                <span>{editingDriveId ? 'Edit Placement Recruitment Drive' : 'Create Placement Recruitment Drive'}</span>
               </h3>
               <button
                 type="button"
-                onClick={() => setIsCreateModalOpen(false)}
+                onClick={() => setIsDriveModalOpen(false)}
                 className="p-1 text-zinc-400 hover:text-white"
               >
                 <X className="w-5 h-5" />
@@ -435,6 +626,32 @@ export const TrainerDrivesPage: React.FC = () => {
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-zinc-400 block mb-1">Drive Status</label>
+                  <select
+                    value={formData.status || 'OPEN'}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value as DriveStatus })}
+                    className="w-full px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white"
+                  >
+                    <option value="OPEN">OPEN (Accepting Applications)</option>
+                    <option value="UPCOMING">UPCOMING (Announced)</option>
+                    <option value="IN_PROGRESS">IN_PROGRESS (Shortlisting / OAs)</option>
+                    <option value="COMPLETED">COMPLETED (Drive Concluded)</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs text-zinc-400 block mb-1">Openings Count</label>
+                  <input
+                    type="number"
+                    value={formData.openingsCount || 10}
+                    onChange={(e) => setFormData({ ...formData, openingsCount: Number(e.target.value) })}
+                    className="w-full px-3 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-xs text-white"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="text-xs text-zinc-400 block mb-1">Job Description &amp; Responsibilities</label>
                 <textarea
@@ -473,16 +690,19 @@ export const TrainerDrivesPage: React.FC = () => {
             <div className="flex justify-end gap-2 pt-3 border-t border-white/[0.08]">
               <button
                 type="button"
-                onClick={() => setIsCreateModalOpen(false)}
+                disabled={isSaving}
+                onClick={() => setIsDriveModalOpen(false)}
                 className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-6 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs shadow-lg shadow-violet-600/30"
+                disabled={isSaving}
+                className="px-6 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs shadow-lg shadow-violet-600/30 flex items-center gap-1.5"
               >
-                Create Recruitment Drive
+                {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                <span>{editingDriveId ? 'Save Changes' : 'Create Recruitment Drive'}</span>
               </button>
             </div>
           </form>

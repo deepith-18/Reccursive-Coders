@@ -199,10 +199,14 @@ Administrators can initiate read-only impersonation sessions to inspect student 
 ### Placement Recruitment Drives
 | Method | Endpoint | Access | Description |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/placement/drives` | `ADMIN`, `TRAINER` | Create campus recruitment drive |
-| `GET` | `/api/v1/placement/drives` | Authenticated | List recruitment drives with eligibility indicators |
-| `POST` | `/api/v1/placement/drives/{id}/apply` | `STUDENT` | Submit drive application |
-| `PATCH` | `/api/v1/placement/drives/{id}/applications/{appId}` | `ADMIN`, `TRAINER` | Advance application status stage |
+| `GET` | `/api/v1/placements/drives` | Authenticated | List recruitment drives with eligibility indicators |
+| `GET` | `/api/v1/placements/drives/{id}` | Authenticated | Get placement drive details by ID |
+| `POST` | `/api/v1/placements/drives` | `ADMIN`, `TRAINER` | Create campus recruitment drive |
+| `PUT` | `/api/v1/placements/drives/{id}` | `ADMIN`, `TRAINER` | Update existing placement drive details, package, or status |
+| `DELETE` | `/api/v1/placements/drives/{id}` | `ADMIN`, `TRAINER` | Delete recruitment drive and associated applications |
+| `POST` | `/api/v1/placements/drives/{id}/apply` | `STUDENT` | Submit student drive application |
+| `GET` | `/api/v1/placements/drives/{id}/applications` | `ADMIN`, `TRAINER` | Review applicant roster for a drive |
+| `PATCH` | `/api/v1/placements/applications/{id}/status` | `ADMIN`, `TRAINER` | Advance candidate hiring stage and interview notes |
 
 ---
 

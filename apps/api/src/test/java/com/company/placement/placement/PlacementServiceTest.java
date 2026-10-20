@@ -173,4 +173,13 @@ class PlacementServiceTest {
                 .isInstanceOf(ApiException.class)
                 .hasMessageContaining("does not meet the minimum requirement");
     }
+
+    @Test
+    void deleteDrive_Success() {
+        when(driveRepository.findById(drive.getId())).thenReturn(Optional.of(drive));
+
+        placementService.deleteDrive(drive.getId());
+
+        verify(driveRepository).delete(drive);
+    }
 }

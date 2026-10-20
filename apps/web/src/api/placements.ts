@@ -114,6 +114,13 @@ export const placementApi = {
     return res.data.data;
   },
 
+  deleteDrive: async (id: string) => {
+    const res = await apiClient.delete<{ success: boolean; data: null }>(
+      `/api/v1/placements/drives/${id}`
+    );
+    return res.data;
+  },
+
   applyToDrive: async (id: string) => {
     const res = await apiClient.post<{ success: boolean; data: PlacementApplicationResponse }>(
       `/api/v1/placements/drives/${id}/apply`
