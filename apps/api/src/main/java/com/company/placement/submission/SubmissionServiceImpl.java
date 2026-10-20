@@ -116,6 +116,15 @@ public class SubmissionServiceImpl implements SubmissionService {
             sampleCases = List.of(question.getTestCases().get(0));
         }
 
+        if (sampleCases.isEmpty()) {
+            TestCase defaultTc = TestCase.builder()
+                    .inputData("")
+                    .expectedOutput("")
+                    .isSample(true)
+                    .build();
+            sampleCases = List.of(defaultTc);
+        }
+
         SubmissionVerdict overallVerdict = SubmissionVerdict.ACCEPTED;
 
         for (int i = 0; i < sampleCases.size(); i++) {
@@ -213,6 +222,14 @@ public class SubmissionServiceImpl implements SubmissionService {
         }
 
         List<TestCase> allCases = question.getTestCases() != null ? question.getTestCases() : List.of();
+        if (allCases.isEmpty()) {
+            TestCase defaultTc = TestCase.builder()
+                    .inputData("")
+                    .expectedOutput("")
+                    .isSample(true)
+                    .build();
+            allCases = List.of(defaultTc);
+        }
         int totalCases = allCases.size();
         int passedCases = 0;
         SubmissionVerdict overallVerdict = SubmissionVerdict.ACCEPTED;

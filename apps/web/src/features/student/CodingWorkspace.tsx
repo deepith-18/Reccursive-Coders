@@ -67,20 +67,22 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
   const [submissionsHistory, setSubmissionsHistory] = useState<SubmissionSummaryResponse[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(false);
 
-  // Setup initial starter code for selected language
   const getStarterCode = (lang: ProgrammingLanguage) => {
     switch (lang) {
       case 'PYTHON':
-        return question.starterCodePython || '# Write your solution here\nclass Solution:\n    def solve(self):\n        pass\n';
+        return (
+          question.starterCodePython ||
+          'import sys\n\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().split()\n    if lines:\n        print(" ".join(lines))\n    else:\n        print("Hello from Python!")\n\nif __name__ == "__main__":\n    main()\n'
+        );
       case 'JAVA':
         return (
           question.starterCodeJava ||
-          '// Write your solution here\nimport java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n    }\n}\n'
+          'import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            System.out.println(sc.nextLine());\n        } else {\n            System.out.println("Hello from Java!");\n        }\n    }\n}\n'
         );
       case 'CPP':
         return (
           question.starterCodeCpp ||
-          '// Write your solution here\n#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    return 0;\n}\n'
+          '#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string line;\n    if (getline(cin, line)) {\n        cout << line << endl;\n    } else {\n        cout << "Hello from C++!" << endl;\n    }\n    return 0;\n}\n'
         );
     }
   };
@@ -122,9 +124,18 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
     }
   }, [leftTab]);
 
-  const handleRunCode = async () => {
+  const handleRunCode = async (overrideCustom?: string) => {
     setIsRunning(true);
     setIsConsoleExpanded(true);
+
+    const isCustomActive = bottomTab === 'custom' && customInput.trim().length > 0;
+    const inputToSend =
+      overrideCustom !== undefined
+        ? overrideCustom
+        : isCustomActive
+        ? customInput.trim()
+        : undefined;
+
     setBottomTab('result');
 
     try {
@@ -132,7 +143,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
         questionId: question.id,
         sourceCode,
         language: selectedLanguage,
-        customInput: bottomTab === 'custom' && customInput.trim() ? customInput.trim() : undefined,
+        customInput: inputToSend,
       });
 
       setExecutionResult({
@@ -286,7 +297,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
         {/* Right: Run & Submit Actions */}
         <div className="flex items-center gap-2.5">
           <button
-            onClick={handleRunCode}
+            onClick={() => handleRunCode()}
             disabled={isRunning || isSubmitting}
             className="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-semibold border border-white/10 flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50"
           >
@@ -597,16 +608,27 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
 
                 {/* TAB 2: CUSTOM INPUT */}
                 {bottomTab === 'custom' && (
-                  <div className="space-y-2">
-                    <label className="text-[11px] text-muted-foreground block">
-                      Custom STDIN (Will be passed to your solution when you click &quot;Run Code&quot;):
-                    </label>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] text-muted-foreground block font-sans">
+                        Custom STDIN (Fed to your solution via standard input):
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => handleRunCode(customInput.trim())}
+                        disabled={isRunning || isSubmitting}
+                        className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-sans text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        <Play className="w-3 h-3 fill-current" />
+                        Run with Custom STDIN
+                      </button>
+                    </div>
                     <textarea
                       rows={4}
                       value={customInput}
                       onChange={(e) => setCustomInput(e.target.value)}
                       placeholder="Type custom test input here..."
-                      className="w-full p-2.5 rounded-lg bg-black/60 border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-primary"
+                      className="w-full p-2.5 rounded-lg bg-black/60 border border-white/10 text-white font-mono text-xs focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                 )}

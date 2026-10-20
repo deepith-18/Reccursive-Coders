@@ -5,10 +5,10 @@ import { LayoutDashboard, Users, Layers, Eye, Trophy } from 'lucide-react';
 
 const adminNav: NavItem[] = [
   { label: 'Admin Overview', to: '/admin', icon: LayoutDashboard },
-  { label: 'User Directory', to: '/admin/users', icon: Users, badge: 'Phase 1' },
-  { label: 'Batch Setup', to: '/admin/batches', icon: Layers, badge: 'Phase 2' },
-  { label: 'Leaderboard', to: '/admin/leaderboard', icon: Trophy, badge: 'Phase 5' },
-  { label: 'View As Student', to: '/admin/impersonate', icon: Eye, badge: 'Phase 6' },
+  { label: 'User Directory', to: '/admin/users', icon: Users, badge: 'Directory' },
+  { label: 'Batch Setup', to: '/admin/batches', icon: Layers, badge: 'Cohorts' },
+  { label: 'Leaderboard', to: '/admin/leaderboard', icon: Trophy, badge: 'Global' },
+  { label: 'View As Student', to: '/admin/impersonate', icon: Eye, badge: 'Live' },
 ];
 
 export const AdminLayout: React.FC = () => {
