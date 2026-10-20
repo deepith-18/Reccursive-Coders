@@ -1,0 +1,139 @@
+version: '3.8'
+
+services:
+  # 1. Primary PostgreSQL 16 Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: recursive-coders-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-placement_platform}
+      POSTGRES_USER: ${POSTGRES_USER:-placement_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeThisInProduction123!}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-placement_admin} -d ${POSTGRES_DB:-placement_platform}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - placement-network
+
+  # 2. Spring Boot 3.3.4 Production Backend API
+  placement-api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: recursive-coders-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-placement_platform}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-placement_admin}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-ChangeThisInProduction123!}
+      JWT_SECRET: ${JWT_SECRET:-9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f}
+      JUDGE0_URL: ${JUDGE0_URL:-http://judge0-server:2358}
+      STORAGE_RESUME_PATH: /app/uploads/resumes
+    volumes:
+      - uploads_data:/app/uploads
+    networks:
+      - placement-network
+    expose:
+      - "8080"
+
+  # 3. Nginx + React Web Client
+  placement-web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    container_name: recursive-coders-web
+    restart: unless-stopped
+    depends_on:
+      - placement-api
+    ports:
+      - "${PORT:-80}:80"
+    networks:
+      - placement-network
+
+  # 4. Optional Sandbox: Judge0 Self-Hosted Code Execution
+  judge0-server:
+    image: judge0/judge0:1.13.0
+    container_name: recursive-coders-judge0-server
+    profiles: ["judge0", "full"]
+    volumes:
+      - ./infra/judge0/judge0.conf:/judge0.conf:ro
+    privileged: true
+    environment:
+      - REDIS_URL=redis://judge0-redis:6379
+      - POSTGRES_SERVER=judge0-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    networks:
+      - placement-network
+    restart: unless-stopped
+
+  judge0-workers:
+    image: judge0/judge0:1.13.0
+    container_name: recursive-coders-judge0-workers
+    profiles: ["judge0", "full"]
+    command: ["./scripts/workers"]
+    volumes:
+      - ./infra/judge0/judge0.conf:/judge0.conf:ro
+    privileged: true
+    environment:
+      - REDIS_URL=redis://judge0-redis:6379
+      - POSTGRES_SERVER=judge0-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    networks:
+      - placement-network
+    restart: unless-stopped
+
+  judge0-redis:
+    image: redis:7-alpine
+    container_name: recursive-coders-judge0-redis
+    profiles: ["judge0", "full"]
+    command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - placement-network
+    restart: unless-stopped
+
+  judge0-db:
+    image: postgres:16-alpine
+    container_name: recursive-coders-judge0-db
+    profiles: ["judge0", "full"]
+    environment:
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0
+    volumes:
+      - judge0_prod_data:/var/lib/postgresql/data
+    networks:
+      - placement-network
+    restart: unless-stopped
+
+networks:
+  placement-network:
+    driver: bridge
+
+volumes:
+  postgres_prod_data:
+    driver: local
+  uploads_data:
+    driver: local
+  judge0_prod_data:
+    driver: local

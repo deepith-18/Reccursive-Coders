@@ -171,7 +171,7 @@ pnpm --filter @placement/web run build
 - [x] **Phase 3 - Questions & Assignments**: Markdown question builder, sample & hidden test cases, assignments with deadlines, urgency countdowns, and student problem viewers.
 - [x] **Phase 4 - Coding Practice & Execution**: Judge0 sandbox, Monaco editor, Run vs Submit verdicts, custom stdin console, and submission audit trail.
 - [x] **Phase 5 - Scoring & Engagement**: Asia/Kolkata streaks, GitHub activity heatmap, batch & global leaderboards with top 3 podium recognition.
-- [ ] **Phase 6 - Admin Power Features**: Read-only student impersonation, cohort progress analytics, and weak topics radar.
-- [ ] **Phase 7 - Placement Module**: Recruitment drives, eligibility criteria, and application pipelines.
-- [ ] **Phase 8 - Hardening & Deploy**: OWASP security review, rate limits, Testcontainers, and production Docker builds.
+- [x] **Phase 6 - Placement Recruitment System**: Campus & partner corporate drives, eligibility evaluations, package filters, and 4-stage application pipelines.
+- [x] **Phase 7 - Admin Power Features & Analytics**: Read-only student impersonation, cohort progress analytics, weak topics radar, and real-time in-app notification center.
+- [x] **Phase 8 - Production Hardening & Deployment**: OWASP security headers, sliding-window API rate limiting, multi-stage production Dockerfiles, Nginx SPA routing, and [Production Deployment Runbook](docs/deployment.md).
 
