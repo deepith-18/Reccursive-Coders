@@ -36,8 +36,10 @@ class OpenApiExportTest {
         Files.createDirectories(targetPath.getParent());
         Files.writeString(targetPath, openApiJson);
 
-        // Also sync to apps/web/openapi.json for frontend client generation
+        // Also sync to apps/web/openapi.json for frontend client generation if directory exists
         Path webPath = Paths.get("..", "web", "openapi.json");
-        Files.writeString(webPath, openApiJson);
+        if (webPath.getParent() != null && Files.exists(webPath.getParent())) {
+            Files.writeString(webPath, openApiJson);
+        }
     }
 }
