@@ -43,6 +43,7 @@ public class DataInitializer implements CommandLineRunner {
     private final QuestionRepository questionRepository;
     private final AssignmentRepository assignmentRepository;
     private final AssignmentQuestionRepository assignmentQuestionRepository;
+    private final com.company.placement.placement.PlacementDriveRepository placementDriveRepository;
 
     @Override
     public void run(String... args) {
@@ -258,6 +259,65 @@ public class DataInitializer implements CommandLineRunner {
                         .build());
             }
             log.info("Seeded Assignment: Sprint 1 with questions attached.");
+        }
+
+        // 8. Seed Recruitment Placement Drives (Phase 6)
+        if (placementDriveRepository.count() == 0) {
+            placementDriveRepository.save(com.company.placement.placement.PlacementDrive.builder()
+                    .title("Amazon Software Development Engineer Recruitment Drive 2026")
+                    .companyName("Amazon")
+                    .companyLogoUrl("https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg")
+                    .jobRole("Software Development Engineer (SDE-1)")
+                    .description("Join Amazon Web Services & Consumer Tech teams in Bengaluru. Candidates must demonstrate deep knowledge of Data Structures, Algorithms, Distributed Systems, and Object-Oriented Design in Java/Python.")
+                    .packageCtcLpa(new java.math.BigDecimal("18.50"))
+                    .location("Bengaluru, Karnataka (Hybrid)")
+                    .minCgpa(7.5)
+                    .eligibleBranches("CSE, ISE, ECE, EEE, AI/DS")
+                    .minCodingScore(50)
+                    .driveDate(Instant.now().plus(7, ChronoUnit.DAYS))
+                    .applicationDeadline(Instant.now().plus(5, ChronoUnit.DAYS))
+                    .status(com.company.placement.placement.DriveStatus.OPEN)
+                    .openingsCount(15)
+                    .creator(admin)
+                    .build());
+
+            placementDriveRepository.save(com.company.placement.placement.PlacementDrive.builder()
+                    .title("Recursive Coders Tier-1 Partner Drive: Full Stack Engineer")
+                    .companyName("FastTrack Technologies")
+                    .companyLogoUrl("https://images.unsplash.com/photo-1549924231-f129b911e442?w=100")
+                    .jobRole("Full Stack Java & React Engineer")
+                    .description("High-growth enterprise product engineering firm hiring for core platform development. Strong expertise in Spring Boot, PostgreSQL, React, and RESTful Microservices required.")
+                    .packageCtcLpa(new java.math.BigDecimal("9.00"))
+                    .location("Vijayanagara, Bengaluru")
+                    .minCgpa(6.5)
+                    .eligibleBranches("All Engineering Branches & MCA")
+                    .minCodingScore(30)
+                    .driveDate(Instant.now().plus(10, ChronoUnit.DAYS))
+                    .applicationDeadline(Instant.now().plus(8, ChronoUnit.DAYS))
+                    .status(com.company.placement.placement.DriveStatus.OPEN)
+                    .openingsCount(20)
+                    .creator(admin)
+                    .build());
+
+            placementDriveRepository.save(com.company.placement.placement.PlacementDrive.builder()
+                    .title("React Native & Mobile Engineering Placement Drive")
+                    .companyName("Recursive Coders Bengaluru")
+                    .companyLogoUrl("/recursive-coders-logo.png")
+                    .jobRole("React Native Specialist Intern & FTE")
+                    .description("Design high-performance cross-platform mobile apps using React Native, TypeScript, Redux Toolkit, and native mobile bridges. Excellent opportunity with fast-track promotion.")
+                    .packageCtcLpa(new java.math.BigDecimal("3.50"))
+                    .location("Bengaluru, India")
+                    .minCgpa(6.0)
+                    .eligibleBranches("BE/BTech, MCA, BSc CS (2025/2026)")
+                    .minCodingScore(20)
+                    .driveDate(Instant.now().plus(14, ChronoUnit.DAYS))
+                    .applicationDeadline(Instant.now().plus(12, ChronoUnit.DAYS))
+                    .status(com.company.placement.placement.DriveStatus.OPEN)
+                    .openingsCount(10)
+                    .creator(trainer)
+                    .build());
+
+            log.info("Seeded 3 authentic placement recruitment drives.");
         }
 
         log.info("Demo dataset initialization completed successfully.");

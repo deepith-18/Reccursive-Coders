@@ -13,6 +13,7 @@ import {
   Sparkles,
   Command,
   LayoutDashboard,
+  Briefcase,
 } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { useAuth } from '@/features/auth/AuthContext';
@@ -103,6 +104,17 @@ export const Navbar: React.FC = () => {
                   <span>Assignments</span>
                 </Link>
                 <Link
+                  to="/student/placements"
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isLinkActive('/student/placements')
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
+                  }`}
+                >
+                  <Briefcase className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Placements</span>
+                </Link>
+                <Link
                   to="/student/leaderboard"
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/student/leaderboard')
@@ -163,6 +175,17 @@ export const Navbar: React.FC = () => {
                   <span>Question Builder</span>
                 </Link>
                 <Link
+                  to="/trainer/placements"
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isLinkActive('/trainer/placements')
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
+                  }`}
+                >
+                  <Briefcase className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Placement Drives</span>
+                </Link>
+                <Link
                   to="/trainer/leaderboard"
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/trainer/leaderboard')
@@ -210,6 +233,17 @@ export const Navbar: React.FC = () => {
                 >
                   <Command className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Batches</span>
+                </Link>
+                <Link
+                  to="/admin/placements"
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isLinkActive('/admin/placements')
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
+                  }`}
+                >
+                  <Briefcase className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Drives</span>
                 </Link>
                 <Link
                   to="/admin/leaderboard"

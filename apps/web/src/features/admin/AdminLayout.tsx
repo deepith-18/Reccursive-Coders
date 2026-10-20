@@ -1,12 +1,13 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar, NavItem } from '@/shared/components/Sidebar';
-import { LayoutDashboard, Users, Layers, Eye, Trophy } from 'lucide-react';
+import { LayoutDashboard, Users, Layers, Eye, Trophy, Briefcase } from 'lucide-react';
 
 const adminNav: NavItem[] = [
   { label: 'Admin Overview', to: '/admin', icon: LayoutDashboard },
   { label: 'User Directory', to: '/admin/users', icon: Users, badge: 'Directory' },
   { label: 'Batch Setup', to: '/admin/batches', icon: Layers, badge: 'Cohorts' },
+  { label: 'Placement Drives', to: '/admin/placements', icon: Briefcase, badge: 'Drives' },
   { label: 'Leaderboard', to: '/admin/leaderboard', icon: Trophy, badge: 'Global' },
   { label: 'View As Student', to: '/admin/impersonate', icon: Eye, badge: 'Live' },
 ];

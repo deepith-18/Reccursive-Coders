@@ -10,12 +10,14 @@ import { StudentDashboardPage } from '@/features/student/StudentDashboardPage';
 import { StudentPracticePage } from '@/features/student/StudentPracticePage';
 import { StudentAssignmentsPage } from '@/features/student/StudentAssignmentsPage';
 import { StudentProfilePage } from '@/features/student/StudentProfilePage';
+import { PlacementDrivesPage } from '@/features/student/PlacementDrivesPage';
 
 // Trainer Portal
 import { TrainerLayout } from '@/features/trainer/TrainerLayout';
 import { TrainerDashboardPage } from '@/features/trainer/TrainerDashboardPage';
 import { TrainerBatchesPage } from '@/features/trainer/TrainerBatchesPage';
 import { TrainerQuestionBuilderPage } from '@/features/trainer/TrainerQuestionBuilderPage';
+import { TrainerDrivesPage } from '@/features/trainer/TrainerDrivesPage';
 
 // Admin Portal
 import { AdminLayout } from '@/features/admin/AdminLayout';
@@ -52,6 +54,7 @@ export const router = createBrowserRouter([
           { index: true, element: <StudentDashboardPage /> },
           { path: 'practice', element: <StudentPracticePage /> },
           { path: 'assignments', element: <StudentAssignmentsPage /> },
+          { path: 'placements', element: <PlacementDrivesPage /> },
           { path: 'leaderboard', element: <LeaderboardPage /> },
           { path: 'profile', element: <StudentProfilePage /> },
         ],
@@ -68,6 +71,7 @@ export const router = createBrowserRouter([
           { index: true, element: <TrainerDashboardPage /> },
           { path: 'batches', element: <TrainerBatchesPage /> },
           { path: 'questions', element: <TrainerQuestionBuilderPage /> },
+          { path: 'placements', element: <TrainerDrivesPage /> },
           { path: 'leaderboard', element: <LeaderboardPage /> },
         ],
       },
@@ -83,6 +87,7 @@ export const router = createBrowserRouter([
           { index: true, element: <AdminDashboardPage /> },
           { path: 'users', element: <AdminUsersPage /> },
           { path: 'batches', element: <AdminBatchesPage /> },
+          { path: 'placements', element: <TrainerDrivesPage /> },
           { path: 'leaderboard', element: <LeaderboardPage /> },
           { path: 'impersonate', element: <AdminImpersonationPage /> },
         ],
