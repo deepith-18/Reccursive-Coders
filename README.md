@@ -162,6 +162,19 @@ pnpm --filter @placement/web run build
 | `GET` | `/api/v1/scoring/overview` | Authenticated | Current student global rank, total score, problems solved, and active streak |
 | `GET` | `/api/v1/scoring/overview/{studentId}` | `ADMIN`, `TRAINER` | Inspect candidate student's scoring rank and streak status |
 
+### Phase 9: Mock Placement Assessments & Anti-Cheat Proctoring
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/assessments` | `ADMIN`, `TRAINER` | Create a new mock assessment or timed contest |
+| `GET` | `/api/v1/assessments` | Authenticated | List all assessments with status and eligibility filters |
+| `GET` | `/api/v1/assessments/{id}` | Authenticated | Get detailed assessment metadata, time limits & question list |
+| `POST` | `/api/v1/assessments/{id}/start` | `STUDENT` | Start proctored assessment attempt & initialize timer session |
+| `POST` | `/api/v1/assessments/{id}/violations` | `STUDENT` | Audit anti-cheat tab-switch or copy-paste violation strikes |
+| `POST` | `/api/v1/assessments/{id}/submit` | `STUDENT` | Submit final assessment attempt, compute score & dispatch alert |
+| `GET` | `/api/v1/assessments/{id}/leaderboard` | Authenticated | Live contest leaderboard ranked by score and duration |
+| `GET` | `/api/v1/assessments/{id}/roster` | `ADMIN`, `TRAINER` | Live proctoring radar tracking candidate strikes and disqualifications |
+| `GET` | `/api/v1/assessments/my-attempts` | `STUDENT` | List personal assessment history, scores, and integrity rating |
+
 ---
 
 ## 📋 Roadmap & Phase Status
@@ -174,4 +187,6 @@ pnpm --filter @placement/web run build
 - [x] **Phase 6 - Placement Recruitment System**: Campus & partner corporate drives, eligibility evaluations, package filters, and 4-stage application pipelines.
 - [x] **Phase 7 - Admin Power Features & Analytics**: Read-only student impersonation, cohort progress analytics, weak topics radar, and real-time in-app notification center.
 - [x] **Phase 8 - Production Hardening & Deployment**: OWASP security headers, sliding-window API rate limiting, multi-stage production Dockerfiles, Nginx SPA routing, and [Production Deployment Runbook](docs/deployment.md).
+- [x] **Phase 9 - Mock Assessments & Proctoring Engine**: Timed recruitment mock tests, coding contests, full-screen anti-cheat tab-switch detection (3 strikes limit), code execution runner, scorecards, and live trainer proctoring radar.
+
 

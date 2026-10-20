@@ -45,6 +45,7 @@ public class DataInitializer implements CommandLineRunner {
     private final AssignmentQuestionRepository assignmentQuestionRepository;
     private final com.company.placement.placement.PlacementDriveRepository placementDriveRepository;
     private final com.company.placement.notification.NotificationRepository notificationRepository;
+    private final com.company.placement.assessment.AssessmentRepository assessmentRepository;
 
     @Override
     public void run(String... args) {
@@ -351,6 +352,59 @@ public class DataInitializer implements CommandLineRunner {
                     .build());
 
             log.info("Seeded 3 authentic demo notifications for student.");
+        }
+
+        // 10. Seed Authentic Mock Assessments & Contests (Phase 9)
+        if (assessmentRepository.count() == 0) {
+            assessmentRepository.save(com.company.placement.assessment.Assessment.builder()
+                    .title("Amazon SDE-1 Comprehensive Mock Assessment")
+                    .description("Full-pattern technical screening featuring 2 DSA algorithmic challenges and system architecture questions under timed conditions.")
+                    .companyTag("Amazon")
+                    .type(com.company.placement.assessment.AssessmentType.MOCK_DRIVE)
+                    .status(com.company.placement.assessment.AssessmentStatus.ACTIVE)
+                    .proctoringLevel(com.company.placement.assessment.ProctoringLevel.STRICT)
+                    .durationMinutes(75)
+                    .maxViolationsAllowed(3)
+                    .passingScore(70)
+                    .totalPoints(100)
+                    .startsAt(Instant.now())
+                    .endsAt(Instant.now().plus(14, ChronoUnit.DAYS))
+                    .createdBy(trainer)
+                    .build());
+
+            assessmentRepository.save(com.company.placement.assessment.Assessment.builder()
+                    .title("TCS Digital National Qualifier Mock Contest")
+                    .description("Timed contest modeling the latest TCS Digital recruitment test with advanced data structures, sliding window, and graph traversal.")
+                    .companyTag("TCS Digital")
+                    .type(com.company.placement.assessment.AssessmentType.CODING_CONTEST)
+                    .status(com.company.placement.assessment.AssessmentStatus.ACTIVE)
+                    .proctoringLevel(com.company.placement.assessment.ProctoringLevel.STRICT)
+                    .durationMinutes(90)
+                    .maxViolationsAllowed(3)
+                    .passingScore(60)
+                    .totalPoints(100)
+                    .startsAt(Instant.now())
+                    .endsAt(Instant.now().plus(10, ChronoUnit.DAYS))
+                    .createdBy(trainer)
+                    .build());
+
+            assessmentRepository.save(com.company.placement.assessment.Assessment.builder()
+                    .title("Dynamic Programming Master Sprint")
+                    .description("Intense topic assessment on Knapsack patterns, Longest Common Subsequence, and Multi-dimensional Memoization.")
+                    .companyTag("Recursive Coders")
+                    .type(com.company.placement.assessment.AssessmentType.TOPIC_SPRINT)
+                    .status(com.company.placement.assessment.AssessmentStatus.ACTIVE)
+                    .proctoringLevel(com.company.placement.assessment.ProctoringLevel.MODERATE)
+                    .durationMinutes(60)
+                    .maxViolationsAllowed(5)
+                    .passingScore(65)
+                    .totalPoints(100)
+                    .startsAt(Instant.now())
+                    .endsAt(Instant.now().plus(7, ChronoUnit.DAYS))
+                    .createdBy(trainer)
+                    .build());
+
+            log.info("Seeded 3 authentic mock assessments and coding contests for Phase 9.");
         }
 
         log.info("Demo dataset initialization completed successfully.");

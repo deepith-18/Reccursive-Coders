@@ -408,19 +408,31 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     private SubmissionVerdict mapJudge0StatusToVerdict(Judge0Status status) {
-        if (status == null)
+        if (status == null) {
             return SubmissionVerdict.INTERNAL_ERROR;
-        return switch (status) {
-            case ACCEPTED -> SubmissionVerdict.ACCEPTED;
-            case WRONG_ANSWER -> SubmissionVerdict.WRONG_ANSWER;
-            case TIME_LIMIT_EXCEEDED -> SubmissionVerdict.TIME_LIMIT_EXCEEDED;
-            case COMPILATION_ERROR -> SubmissionVerdict.COMPILATION_ERROR;
-            case RUNTIME_ERROR_SIGSEGV, RUNTIME_ERROR_SIGXFSZ, RUNTIME_ERROR_SIGFPE,
-                    RUNTIME_ERROR_SIGABRT, RUNTIME_ERROR_NZEC, RUNTIME_ERROR_OTHER,
-                    EXEC_FORMAT_ERROR ->
-                SubmissionVerdict.RUNTIME_ERROR;
-            default -> SubmissionVerdict.INTERNAL_ERROR;
-        };
+        }
+        if (status == Judge0Status.ACCEPTED) {
+            return SubmissionVerdict.ACCEPTED;
+        }
+        if (status == Judge0Status.WRONG_ANSWER) {
+            return SubmissionVerdict.WRONG_ANSWER;
+        }
+        if (status == Judge0Status.TIME_LIMIT_EXCEEDED) {
+            return SubmissionVerdict.TIME_LIMIT_EXCEEDED;
+        }
+        if (status == Judge0Status.COMPILATION_ERROR) {
+            return SubmissionVerdict.COMPILATION_ERROR;
+        }
+        if (status == Judge0Status.RUNTIME_ERROR_SIGSEGV ||
+            status == Judge0Status.RUNTIME_ERROR_SIGXFSZ ||
+            status == Judge0Status.RUNTIME_ERROR_SIGFPE ||
+            status == Judge0Status.RUNTIME_ERROR_SIGABRT ||
+            status == Judge0Status.RUNTIME_ERROR_NZEC ||
+            status == Judge0Status.RUNTIME_ERROR_OTHER ||
+            status == Judge0Status.EXEC_FORMAT_ERROR) {
+            return SubmissionVerdict.RUNTIME_ERROR;
+        }
+        return SubmissionVerdict.INTERNAL_ERROR;
     }
 
     private boolean matchesOutput(String actual, String expected) {
