@@ -15,10 +15,10 @@ export type PageBatchResponse = {
     content?: Array<BatchResponse>;
     number?: number;
     sort?: Array<SortObject>;
-    first?: boolean;
-    last?: boolean;
     numberOfElements?: number;
+    first?: boolean;
     pageable?: PageableObject;
+    last?: boolean;
     empty?: boolean;
 };
 

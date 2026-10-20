@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +24,8 @@ public interface BatchStudentRepository extends JpaRepository<BatchStudent, UUID
            "JOIN FETCH bs.student s " +
            "WHERE bs.batch.id = :batchId")
     Page<BatchStudent> findEnrolledStudentsByBatchId(@Param("batchId") UUID batchId, Pageable pageable);
+
+    List<BatchStudent> findByStudentId(UUID studentId);
 
     void deleteByBatchIdAndStudentId(UUID batchId, UUID studentId);
 }

@@ -15,10 +15,10 @@ export type PageBatchStudentResponse = {
     content?: Array<BatchStudentResponse>;
     number?: number;
     sort?: Array<SortObject>;
-    first?: boolean;
-    last?: boolean;
     numberOfElements?: number;
+    first?: boolean;
     pageable?: PageableObject;
+    last?: boolean;
     empty?: boolean;
 };
 

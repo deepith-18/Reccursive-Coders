@@ -126,13 +126,31 @@ pnpm --filter @placement/web run build
 | `GET` | `/api/v1/students/profile/resume` | `STUDENT` | Download uploaded resume |
 | `GET` | `/api/v1/students/{studentId}/profile` | `ADMIN`, `TRAINER` | Inspect candidate student profile |
 
+### Phase 3: Questions & Assignments
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/questions` | `ADMIN`, `TRAINER` | Create coding question with sample & hidden test cases |
+| `GET` | `/api/v1/questions` | Authenticated | List questions with difficulty, status, tag & search filters |
+| `GET` | `/api/v1/questions/{id}` | Authenticated | Get question statement (hidden test cases masked for students) |
+| `GET` | `/api/v1/questions/slug/{slug}` | Authenticated | Get question by slug |
+| `PUT` | `/api/v1/questions/{id}` | `ADMIN`, `TRAINER` | Update question details and resource constraints |
+| `DELETE` | `/api/v1/questions/{id}` | `ADMIN`, `TRAINER` | Delete question |
+| `POST` | `/api/v1/questions/{id}/test-cases` | `ADMIN`, `TRAINER` | Add test case to question suite |
+| `DELETE` | `/api/v1/questions/{id}/test-cases/{tcId}` | `ADMIN`, `TRAINER` | Remove test case from question |
+| `POST` | `/api/v1/assignments` | `ADMIN`, `TRAINER` | Create batch assignment with questions, points & deadlines |
+| `GET` | `/api/v1/assignments/batch/{batchId}` | Authenticated | List all assignments for a cohort batch |
+| `GET` | `/api/v1/assignments/my-assignments` | `STUDENT` | List personal assignments for enrolled batches |
+| `GET` | `/api/v1/assignments/{id}` | Authenticated | Get assignment details with attached question list |
+| `PUT` | `/api/v1/assignments/{id}` | `ADMIN`, `TRAINER` | Update assignment details and question points |
+| `DELETE` | `/api/v1/assignments/{id}` | `ADMIN`, `TRAINER` | Delete batch assignment |
+
 ---
 
 ## 📋 Roadmap & Phase Status
 - [x] **Phase 0 - Foundation**: Monorepo skeleton, Spring Boot modular monolith, Flyway baseline, React app shell with Student/Trainer/Admin portals, Docker Compose, CI, and OpenAPI client generation.
 - [x] **Phase 1 - Auth & RBAC**: Stateless JWT + refresh token rotation, password hashing, seeded admin, user creation, CSV bulk import, force-change-password, and audit log table.
 - [x] **Phase 2 - Student Profile & Batches**: Batch CRUD, cohort schedules, trainer assignment, student roster enrollments, profile credentials builder, skills chip tagger, resume upload/download (PDF/DOCX max 5MB), and live completeness meter.
-- [ ] **Phase 3 - Questions & Assignments**: Markdown question builder, sample & hidden test cases, assignments with deadlines.
+- [x] **Phase 3 - Questions & Assignments**: Markdown question builder, sample & hidden test cases, assignments with deadlines, urgency countdowns, and student problem viewers.
 - [ ] **Phase 4 - Coding Practice & Execution**: Judge0 sandbox, Monaco editor, Run vs Submit verdicts.
 - [ ] **Phase 5 - Scoring & Engagement**: Asia/Kolkata streaks, GitHub activity heatmap, batch & global leaderboards.
 - [ ] **Phase 6 - Admin Power Features**: Read-only student impersonation, cohort progress analytics, and weak topics radar.

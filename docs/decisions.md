@@ -53,3 +53,15 @@
 - **Status**: Accepted
 - **Context**: Students need to record college credentials, CGPA, technical skills, portfolio URLs, and upload PDF/DOCX resumes for placement drives without risking direct public file exposure.
 - **Decision**: Academic credentials and skills arrays are stored in `student_profiles` linked 1:1 to `users`. Resumes are stored on disk in a dedicated directory with max 5MB validation, tracked via file metadata in the database, and served through an authenticated binary endpoint (`GET /api/v1/students/profile/resume`) requiring student ownership or recruiter/admin role. Profile completeness is dynamically computed on read.
+
+## ADR-0010: Coding Question Model, Markdown Authoring & Hidden Test Case Masking
+- **Date**: 2026-10-11
+- **Status**: Accepted
+- **Context**: Trainers need to author algorithmic problem statements in Markdown with custom time/memory constraints, starter code templates, and test suites. Sample test cases should be visible to students as examples with explanations, but hidden evaluation test cases must never be leaked to students.
+- **Decision**: Questions are stored in `questions` with slug uniqueness and difficulty tags (`EASY`, `MEDIUM`, `HARD`). Test cases are modeled in `test_cases` with an `is_sample` flag. When students query questions, backend serialization filters out hidden test cases, returning only sample inputs and expected outputs, while trainers and admins receive full test suites.
+
+## ADR-0011: Cohort Assignments & Deadline Urgency Model
+- **Date**: 2026-10-11
+- **Status**: Accepted
+- **Context**: Trainers need to assign problem sets to cohort batches with deadlines, point values, and automatic urgency tracking. Students should only access assignments assigned to their enrolled cohorts.
+- **Decision**: Modeled with `assignments` linked to `batches`, and an `assignment_questions` mapping table tracking individual question point allocations. Student assignment access enforces cohort enrollment verification via `batch_students`. Real-time deadline evaluation computes `isPastDue` and urgency badges dynamically on read.

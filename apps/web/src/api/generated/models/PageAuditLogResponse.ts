@@ -15,10 +15,10 @@ export type PageAuditLogResponse = {
     content?: Array<AuditLogResponse>;
     number?: number;
     sort?: Array<SortObject>;
-    first?: boolean;
-    last?: boolean;
     numberOfElements?: number;
+    first?: boolean;
     pageable?: PageableObject;
+    last?: boolean;
     empty?: boolean;
 };
 

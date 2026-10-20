@@ -15,10 +15,10 @@ export type PageUserResponse = {
     content?: Array<UserResponse>;
     number?: number;
     sort?: Array<SortObject>;
-    first?: boolean;
-    last?: boolean;
     numberOfElements?: number;
+    first?: boolean;
     pageable?: PageableObject;
+    last?: boolean;
     empty?: boolean;
 };
 
