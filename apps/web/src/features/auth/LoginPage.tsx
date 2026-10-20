@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { Lock, Mail, ArrowRight, Sparkles, AlertCircle, Command } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
+import { RecursiveCodersLogo } from '@/shared/components/RecursiveCodersLogo';
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -52,11 +53,8 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-900 border border-white/15 mx-auto flex items-center justify-center text-white shadow-xl">
-            <Command className="w-6 h-6 text-violet-400" />
-          </div>
-          <h1 className="text-2xl font-black tracking-tight text-white">Welcome to Recursive Coders</h1>
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <RecursiveCodersLogo size="lg" showText={true} showTagline={true} />
           <p className="text-xs text-zinc-400">
             Sign in to access your designated portal
           </p>

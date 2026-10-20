@@ -23,6 +23,8 @@ jobs:
 
       - name: Run Backend Tests
         working-directory: apps/api
+        env:
+          SPRING_PROFILES_ACTIVE: test
         run: |
           chmod +x mvnw
           ./mvnw clean test

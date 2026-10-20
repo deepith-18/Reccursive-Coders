@@ -21,8 +21,10 @@ import {
   GraduationCap,
   Loader2,
   Trophy,
+  Swords,
 } from 'lucide-react';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import { CodeBattlesModal } from './CodeBattlesModal';
 
 export const StudentDashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -31,6 +33,7 @@ export const StudentDashboardPage: React.FC = () => {
   const [scoringOverview, setScoringOverview] = useState<StudentScoringOverviewDto | null>(null);
   const [heatmapData, setHeatmapData] = useState<DailyHeatmapDto[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isBattleModalOpen, setIsBattleModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -155,6 +158,41 @@ export const StudentDashboardPage: React.FC = () => {
         totalScore={scoringOverview?.totalScore ?? 0}
         problemsSolved={scoringOverview?.problemsSolved ?? 0}
       />
+
+      {/* Code Battles Modal */}
+      <CodeBattlesModal
+        isOpen={isBattleModalOpen}
+        onClose={() => setIsBattleModalOpen(false)}
+      />
+
+      {/* Code Battles Live Banner */}
+      <div className="p-6 rounded-3xl glass-card border border-violet-500/30 bg-gradient-to-r from-violet-950/40 via-card to-card flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-violet-600 to-cyan-400 p-0.5 shadow-lg shadow-violet-500/20 shrink-0">
+            <div className="w-full h-full bg-[#12131a] rounded-[14px] flex items-center justify-center">
+              <Swords className="w-7 h-7 text-violet-400" />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold text-white">Live Code Battles Arena</h3>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                18 Coders Online
+              </span>
+            </div>
+            <p className="text-xs text-zinc-400 max-w-xl">
+              Challenge fellow candidates in Bengaluru 1v1 speed coding matches. Climb the regional leaderboard and win placement recommendation badges!
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => setIsBattleModalOpen(true)}
+          className="px-6 py-3 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-90 text-white font-bold text-xs shadow-xl shadow-violet-600/30 cursor-pointer transition-all hover:scale-105 active:scale-95 shrink-0 flex items-center gap-2"
+        >
+          <Swords className="w-4 h-4" />
+          <span>Launch Code Battle</span>
+        </button>
+      </div>
 
       {/* Cohort / Enrolled Batch Section */}
       <div className="space-y-4">

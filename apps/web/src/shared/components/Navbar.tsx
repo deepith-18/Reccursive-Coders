@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { useAuth } from '@/features/auth/AuthContext';
+import { RecursiveCodersLogo } from './RecursiveCodersLogo';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -54,27 +55,13 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] glass-panel">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand */}
-        <Link to={getPortalHome()} className="flex items-center gap-3 group shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-900 border border-white/15 flex items-center justify-center text-white shadow-md group-hover:border-violet-500/50 group-hover:scale-105 transition-all">
-            <Command className="w-4 h-4 text-violet-400" />
-          </div>
-          <div>
-            <div className="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
-              <span>Recursive</span>
-              <span className="text-zinc-500 font-light">/</span>
-              <span className="bg-gradient-to-r from-violet-400 to-indigo-300 bg-clip-text text-transparent">
-                Coders
-              </span>
-              {role && (
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/10">
-                  {role}
-                </span>
-              )}
-            </div>
-            <p className="text-[10px] text-zinc-400 font-medium hidden sm:block">
-              Placement &amp; Training Suite
-            </p>
-          </div>
+        <Link to={getPortalHome()} className="flex items-center gap-2 group shrink-0">
+          <RecursiveCodersLogo size="md" showText={true} showTagline={true} />
+          {role && (
+            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 hidden md:inline-block ml-1">
+              {role}
+            </span>
+          )}
         </Link>
 
         {/* Role-Isolated Portal Navigation */}

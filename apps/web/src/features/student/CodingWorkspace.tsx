@@ -8,6 +8,8 @@ import {
   TestCaseRunResultDto,
   SubmissionSummaryResponse,
 } from '@/api/submissions';
+import { executeCodeResiliently, submitCodeResiliently } from './codeExecutor';
+import { RecursiveCodersLogo } from '@/shared/components/RecursiveCodersLogo';
 import {
   Play,
   Send,
@@ -139,12 +141,19 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
     setBottomTab('result');
 
     try {
-      const res = await submissionApi.runCode({
-        questionId: question.id,
-        sourceCode,
-        language: selectedLanguage,
-        customInput: inputToSend,
-      });
+      const res = await executeCodeResiliently(
+        {
+          questionId: question.id,
+          sourceCode,
+          language: selectedLanguage,
+          customInput: inputToSend,
+        },
+        {
+          title: question.title,
+          slug: question.slug,
+          testCases: question.testCases,
+        }
+      );
 
       setExecutionResult({
         verdict: res.overallVerdict,
@@ -155,7 +164,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
         isSubmit: false,
       });
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to run code');
+      console.error('Execution error:', err);
     } finally {
       setIsRunning(false);
     }
@@ -167,12 +176,19 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
     setBottomTab('result');
 
     try {
-      const res = await submissionApi.submitCode({
-        questionId: question.id,
-        assignmentId,
-        sourceCode,
-        language: selectedLanguage,
-      });
+      const res = await submitCodeResiliently(
+        {
+          questionId: question.id,
+          assignmentId,
+          sourceCode,
+          language: selectedLanguage,
+        },
+        {
+          title: question.title,
+          slug: question.slug,
+          testCases: question.testCases,
+        }
+      );
 
       setExecutionResult({
         verdict: res.verdict,
@@ -186,7 +202,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
         isSubmit: true,
       });
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to submit code');
+      console.error('Submission error:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -258,6 +274,8 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
           >
             <X className="w-5 h-5" />
           </button>
+          <RecursiveCodersLogo size="sm" showText={false} />
+          <div className="h-4 w-[1px] bg-white/10" />
           <div className="flex items-center gap-2">
             <h1 className="text-sm font-bold text-white flex items-center gap-2">
               <FileCode className="w-4 h-4 text-violet-400" />

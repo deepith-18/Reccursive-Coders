@@ -17,6 +17,9 @@ public interface QuestionRepository extends JpaRepository<Question, UUID> {
 
     boolean existsBySlugIgnoreCase(String slug);
 
+    @Query("SELECT q FROM Question q LEFT JOIN FETCH q.testCases WHERE q.id = :id")
+    Optional<Question> findByIdWithTestCases(@Param("id") UUID id);
+
     @Query("SELECT q FROM Question q WHERE " +
            "(:status IS NULL OR q.status = :status) AND " +
            "(:difficulty IS NULL OR q.difficulty = :difficulty) AND " +

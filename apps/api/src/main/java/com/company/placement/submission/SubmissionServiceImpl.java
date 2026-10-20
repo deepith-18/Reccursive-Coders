@@ -57,8 +57,10 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final AuditLogService auditLogService;
 
     @Override
+    @Transactional(readOnly = true)
     public RunCodeResponse runCode(RunCodeRequest request, UserPrincipal principal, HttpServletRequest httpRequest) {
-        Question question = questionRepository.findById(request.getQuestionId())
+        Question question = questionRepository.findByIdWithTestCases(request.getQuestionId())
+                .or(() -> questionRepository.findById(request.getQuestionId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", request.getQuestionId()));
 
         List<TestCaseRunResultDto> results = new ArrayList<>();
@@ -192,14 +194,16 @@ public class SubmissionServiceImpl implements SubmissionService {
         User user = userRepository.findById(principal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", principal.getId()));
 
-        Question question = questionRepository.findById(request.getQuestionId())
+        Question question = questionRepository.findByIdWithTestCases(request.getQuestionId())
+                .or(() -> questionRepository.findById(request.getQuestionId()))
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", request.getQuestionId()));
 
         Assignment assignment = null;
         Integer assignmentPoints = null;
 
         if (request.getAssignmentId() != null) {
-            assignment = assignmentRepository.findById(request.getAssignmentId())
+            assignment = assignmentRepository.findByIdWithQuestions(request.getAssignmentId())
+                    .or(() -> assignmentRepository.findById(request.getAssignmentId()))
                     .orElseThrow(() -> new ResourceNotFoundException("Assignment", "id", request.getAssignmentId()));
 
             // Verify enrollment if user is student
