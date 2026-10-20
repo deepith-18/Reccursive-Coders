@@ -167,7 +167,7 @@ export const StudentProfilePage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-violet-400" />
       </div>
     );
   }
@@ -179,26 +179,26 @@ export const StudentProfilePage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-white flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
             Placement Profile &amp; Readiness
-            <Sparkles className="w-6 h-6 text-amber-400" />
+            <Sparkles className="w-5 h-5 text-amber-400" />
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
             Build your academic credentials, technical skills, and resume for placement drives.
           </p>
         </div>
       </div>
 
       {/* Completion Meter Card */}
-      <div className="glass-card p-6 rounded-2xl border border-white/10 relative overflow-hidden bg-gradient-to-r from-primary-950/40 via-card to-background">
+      <div className="glass-card p-6 rounded-3xl relative overflow-hidden bg-gradient-to-r from-white/[0.03] via-card to-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 font-bold text-lg">
+            <div className="w-12 h-12 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 font-black text-lg">
               {completion}%
             </div>
             <div>
-              <h3 className="font-semibold text-white text-base">Profile Completeness Score</h3>
-              <p className="text-xs text-muted-foreground">
+              <h3 className="font-bold text-white text-base">Profile Completeness Score</h3>
+              <p className="text-xs text-zinc-400">
                 {completion === 100
                   ? 'Your profile is 100% verified and drive-ready!'
                   : 'Complete all sections including resume upload to achieve maximum placement visibility.'}
@@ -213,7 +213,7 @@ export const StudentProfilePage: React.FC = () => {
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-slate-800/80 rounded-full h-3 overflow-hidden border border-white/5">
+        <div className="w-full bg-white/[0.05] rounded-full h-2.5 overflow-hidden border border-white/[0.06]">
           <div
             className={`h-full transition-all duration-700 ease-out rounded-full ${
               completion >= 80
@@ -442,11 +442,11 @@ export const StudentProfilePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSaving}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-primary-500/20 disabled:opacity-50 transition-all flex items-center gap-2"
+                className="px-6 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-xs shadow-md shadow-white/5 disabled:opacity-50 transition-all flex items-center gap-2 cursor-pointer"
               >
                 {isSaving ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Saving Changes...
+                    <Loader2 className="w-4 h-4 animate-spin text-zinc-900" /> Saving Changes...
                   </>
                 ) : (
                   'Save Profile Details'
@@ -458,23 +458,23 @@ export const StudentProfilePage: React.FC = () => {
 
         {/* Right Col: Resume Upload Card */}
         <div className="space-y-6">
-          <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-5">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2 border-b border-white/5 pb-3">
-              <FileText className="w-5 h-5 text-primary-400" />
+          <div className="glass-card p-6 rounded-3xl space-y-5">
+            <h2 className="text-base font-bold text-white flex items-center gap-2 border-b border-white/[0.06] pb-3">
+              <FileText className="w-5 h-5 text-violet-400" />
               Resume Document
             </h2>
 
             {profile?.hasResume ? (
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-white/10 space-y-3">
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-3">
                 <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-lg bg-primary-500/10 text-primary-400">
-                    <FileText className="w-6 h-6" />
+                  <div className="p-2.5 rounded-xl bg-violet-500/10 text-violet-400">
+                    <FileText className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-white truncate">
+                    <div className="text-xs font-semibold text-white truncate">
                       {profile.resumeFileName || 'resume.pdf'}
                     </div>
-                    <div className="text-xs text-emerald-400 flex items-center gap-1 mt-0.5">
+                    <div className="text-[11px] text-emerald-400 flex items-center gap-1 mt-0.5">
                       <CheckCircle2 className="w-3 h-3" /> Attached to Profile
                     </div>
                   </div>
@@ -483,19 +483,19 @@ export const StudentProfilePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleDownloadResume}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors border border-white/5"
+                  className="w-full py-2 px-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors border border-white/[0.08]"
                 >
                   <Download className="w-3.5 h-3.5" /> Download Resume
                 </button>
               </div>
             ) : (
-              <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 text-xs text-amber-300">
+              <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 text-xs text-amber-300">
                 No resume uploaded yet. Recruiter shortlisting requires an active PDF resume.
               </div>
             )}
 
             {/* Upload Dropzone */}
-            <label className="relative border-2 border-dashed border-white/15 hover:border-primary-500/50 rounded-2xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center bg-slate-900/40 hover:bg-slate-900/70 block">
+            <label className="relative border-2 border-dashed border-white/[0.12] hover:border-violet-500/50 rounded-2xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center bg-white/[0.02] hover:bg-white/[0.04] block">
               <input
                 type="file"
                 accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -505,18 +505,18 @@ export const StudentProfilePage: React.FC = () => {
               />
               {isUploading ? (
                 <div className="flex flex-col items-center gap-2 py-4">
-                  <Loader2 className="w-8 h-8 animate-spin text-primary-400" />
-                  <span className="text-xs text-muted-foreground">Uploading resume...</span>
+                  <Loader2 className="w-8 h-8 animate-spin text-violet-400" />
+                  <span className="text-xs text-zinc-400">Uploading resume...</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-2 py-2">
-                  <div className="p-3 rounded-xl bg-primary-500/10 text-primary-400">
+                  <div className="p-3 rounded-2xl bg-violet-500/10 text-violet-400">
                     <UploadCloud className="w-6 h-6" />
                   </div>
-                  <div className="text-sm font-semibold text-white">
+                  <div className="text-xs font-bold text-white">
                     {profile?.hasResume ? 'Replace Resume' : 'Upload Resume'}
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-[11px] text-zinc-400">
                     PDF or DOCX (Max 5MB)
                   </p>
                 </div>

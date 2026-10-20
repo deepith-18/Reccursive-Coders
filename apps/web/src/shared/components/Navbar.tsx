@@ -10,8 +10,9 @@ import {
   Shield,
   LogOut,
   LogIn,
-  Layers,
   Sparkles,
+  Command,
+  LayoutDashboard,
 } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { useAuth } from '@/features/auth/AuthContext';
@@ -40,90 +41,100 @@ export const Navbar: React.FC = () => {
   };
 
   const isLinkActive = (path: string) => {
-    return location.pathname === path || (path !== '/student' && path !== '/trainer' && path !== '/admin' && location.pathname.startsWith(path));
+    return (
+      location.pathname === path ||
+      (path !== '/student' &&
+        path !== '/trainer' &&
+        path !== '/admin' &&
+        location.pathname.startsWith(path))
+    );
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 glass-panel">
+    <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] glass-panel">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand */}
         <Link to={getPortalHome()} className="flex items-center gap-3 group shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-            <Layers className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-900 border border-white/15 flex items-center justify-center text-white shadow-md group-hover:border-violet-500/50 group-hover:scale-105 transition-all">
+            <Command className="w-4 h-4 text-violet-400" />
           </div>
           <div>
-            <div className="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5">
-              RECURSIVE<span className="text-indigo-400">CODERS</span>
+            <div className="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
+              <span>Recursive</span>
+              <span className="text-zinc-500 font-light">/</span>
+              <span className="bg-gradient-to-r from-violet-400 to-indigo-300 bg-clip-text text-transparent">
+                Coders
+              </span>
               {role && (
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/25">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/10">
                   {role}
                 </span>
               )}
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium hidden sm:block">
-              Intensive Training &amp; Placement Suite
+            <p className="text-[10px] text-zinc-400 font-medium hidden sm:block">
+              Placement &amp; Training Suite
             </p>
           </div>
         </Link>
 
         {/* Role-Isolated Portal Navigation */}
         {isAuthenticated && role && (
-          <nav className="hidden md:flex items-center gap-1 bg-secondary/40 p-1 rounded-xl border border-white/5">
+          <nav className="hidden md:flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/[0.06] backdrop-blur-md">
             {role === 'STUDENT' && (
               <>
                 <Link
                   to="/student"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     location.pathname === '/student'
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <LayoutDashboard className="w-3.5 h-3.5 text-violet-400" />
                   <span>Dashboard</span>
                 </Link>
                 <Link
                   to="/student/practice"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/student/practice')
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Code className="w-3.5 h-3.5" />
+                  <Code className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Practice</span>
                 </Link>
                 <Link
                   to="/student/assignments"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/student/assignments')
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <FileText className="w-3.5 h-3.5" />
+                  <FileText className="w-3.5 h-3.5 text-amber-400" />
                   <span>Assignments</span>
                 </Link>
                 <Link
                   to="/student/leaderboard"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/student/leaderboard')
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Trophy className="w-3.5 h-3.5" />
+                  <Trophy className="w-3.5 h-3.5 text-yellow-400" />
                   <span>Leaderboard</span>
                 </Link>
                 <Link
                   to="/student/profile"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/student/profile')
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <UserIcon className="w-3.5 h-3.5" />
+                  <UserIcon className="w-3.5 h-3.5 text-sky-400" />
                   <span>Profile</span>
                 </Link>
               </>
@@ -133,46 +144,46 @@ export const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/trainer"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     location.pathname === '/trainer'
-                      ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-3.5 h-3.5 text-fuchsia-400" />
                   <span>Overview</span>
                 </Link>
                 <Link
                   to="/trainer/batches"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/trainer/batches')
-                      ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Users className="w-3.5 h-3.5" />
+                  <Users className="w-3.5 h-3.5 text-violet-400" />
                   <span>Batches</span>
                 </Link>
                 <Link
                   to="/trainer/questions"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/trainer/questions')
-                      ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <FilePlus className="w-3.5 h-3.5" />
+                  <FilePlus className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Question Builder</span>
                 </Link>
                 <Link
                   to="/trainer/leaderboard"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/trainer/leaderboard')
-                      ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Trophy className="w-3.5 h-3.5" />
+                  <Trophy className="w-3.5 h-3.5 text-yellow-400" />
                   <span>Batch Leaderboard</span>
                 </Link>
               </>
@@ -182,46 +193,46 @@ export const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/admin"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     location.pathname === '/admin'
-                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Shield className="w-3.5 h-3.5" />
+                  <Shield className="w-3.5 h-3.5 text-amber-400" />
                   <span>Control Center</span>
                 </Link>
                 <Link
                   to="/admin/users"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/admin/users')
-                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Users className="w-3.5 h-3.5" />
+                  <Users className="w-3.5 h-3.5 text-violet-400" />
                   <span>Users Directory</span>
                 </Link>
                 <Link
                   to="/admin/batches"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/admin/batches')
-                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Layers className="w-3.5 h-3.5" />
+                  <Command className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Batches</span>
                 </Link>
                 <Link
                   to="/admin/leaderboard"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     isLinkActive('/admin/leaderboard')
-                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
+                      ? 'bg-white/10 text-white shadow-sm border border-white/10 font-semibold'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <Trophy className="w-3.5 h-3.5" />
+                  <Trophy className="w-3.5 h-3.5 text-yellow-400" />
                   <span>Global Rank</span>
                 </Link>
               </>
@@ -238,13 +249,13 @@ export const Navbar: React.FC = () => {
                   <span>{user.fullName}</span>
                   <StatusBadge status={role || 'USER'} />
                 </div>
-                <div className="text-[11px] text-muted-foreground font-mono">{user.email}</div>
+                <div className="text-[11px] text-zinc-400 font-mono">{user.email}</div>
               </div>
 
               <button
                 onClick={handleLogout}
                 title="Sign Out"
-                className="p-2 rounded-xl bg-secondary hover:bg-rose-500/10 hover:text-rose-400 text-muted-foreground border border-white/10 transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-white/[0.04] hover:bg-rose-500/10 hover:text-rose-400 text-zinc-400 border border-white/[0.08] hover:border-rose-500/25 transition-all cursor-pointer"
               >
                 <LogOut className="w-4 h-4" />
               </button>
@@ -252,7 +263,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/25 transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-zinc-900 hover:bg-zinc-100 text-xs font-bold shadow-md shadow-white/5 transition-all"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>Sign In</span>

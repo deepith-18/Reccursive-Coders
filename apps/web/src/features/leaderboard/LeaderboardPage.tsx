@@ -81,48 +81,48 @@ export const LeaderboardPage: React.FC = () => {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-card border border-white/10 text-xs self-start md:self-auto shadow-inner">
+        <div className="flex items-center gap-1.5 p-1 rounded-2xl glass-card text-xs self-start md:self-auto">
           <button
             onClick={() => setActiveTab('GLOBAL')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
               activeTab === 'GLOBAL'
-                ? 'bg-primary text-primary-foreground shadow-md'
-                : 'text-muted-foreground hover:text-white'
+                ? 'bg-white/10 text-white shadow-sm border border-white/10 font-bold'
+                : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <Sparkles className="w-4 h-4 text-amber-400" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             Global Rankings
           </button>
           <button
             onClick={() => setActiveTab('BATCH')}
             disabled={!myBatchId}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
               activeTab === 'BATCH'
-                ? 'bg-primary text-primary-foreground shadow-md'
-                : 'text-muted-foreground hover:text-white'
+                ? 'bg-white/10 text-white shadow-sm border border-white/10 font-bold'
+                : 'text-zinc-400 hover:text-white'
             }`}
           >
-            <Users className="w-4 h-4 text-primary-300" />
+            <Users className="w-3.5 h-3.5 text-violet-400" />
             {myBatchName ? `Cohort: ${myBatchName}` : 'My Cohort Batch'}
           </button>
         </div>
       </div>
 
       {/* Filter / Search Bar */}
-      <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-card/40 border border-white/10 backdrop-blur-md">
+      <div className="flex items-center justify-between gap-4 p-3.5 rounded-2xl glass-card">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
           <input
             type="text"
             placeholder="Search by student name, college, or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-background/80 border border-white/10 text-white text-xs focus:outline-none focus:border-primary transition"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:border-violet-500 transition-colors"
           />
         </div>
 
-        <div className="text-xs text-muted-foreground">
-          Showing <strong className="text-white">{filteredEntries.length}</strong> ranked students
+        <div className="text-xs text-zinc-400 font-medium">
+          Showing <strong className="text-white">{filteredEntries.length}</strong> ranked learners
         </div>
       </div>
 

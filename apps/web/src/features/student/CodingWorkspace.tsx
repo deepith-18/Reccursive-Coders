@@ -246,21 +246,21 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
   const sampleCases = question.testCases ? question.testCases.filter((tc) => tc.isSample) : [];
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-950 text-slate-100 animate-in fade-in">
+    <div className="fixed inset-0 z-50 flex flex-col bg-[#0f1014] text-zinc-100 animate-in fade-in">
       {/* TOP WORKSPACE NAVIGATION BAR */}
-      <header className="h-14 border-b border-white/10 px-4 flex items-center justify-between bg-slate-900/80 backdrop-blur-md shrink-0">
+      <header className="h-14 border-b border-white/[0.08] px-4 flex items-center justify-between bg-[#15161c]/90 backdrop-blur-md shrink-0">
         {/* Left Problem Info */}
         <div className="flex items-center gap-3">
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-muted-foreground hover:text-white hover:bg-white/5 transition"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition"
             title="Exit Workspace"
           >
             <X className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-2">
             <h1 className="text-sm font-bold text-white flex items-center gap-2">
-              <FileCode className="w-4 h-4 text-primary-400" />
+              <FileCode className="w-4 h-4 text-violet-400" />
               {question.title}
             </h1>
             <span
@@ -308,7 +308,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
           <button
             onClick={handleSubmitCode}
             disabled={isRunning || isSubmitting}
-            className="px-4 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition shadow-lg shadow-primary/20 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            className="px-4 py-1.5 rounded-lg bg-emerald-500 text-zinc-950 text-xs font-bold hover:bg-emerald-400 transition shadow-lg shadow-emerald-500/20 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -323,7 +323,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
       {/* MAIN SPLIT WORKSPACE BODY */}
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT PANEL: PROBLEM STATEMENT & SUBMISSIONS HISTORY */}
-        <div className="w-1/2 border-r border-white/10 flex flex-col bg-slate-900/30">
+        <div className="w-1/2 border-r border-white/[0.08] flex flex-col bg-[#121318]/50">
           {/* Left Tabs */}
           <div className="h-10 border-b border-white/10 px-4 flex items-center gap-4 text-xs font-semibold bg-muted/20">
             <button
@@ -469,7 +469,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
         </div>
 
         {/* RIGHT PANEL: MONACO EDITOR & BOTTOM TEST CONSOLE */}
-        <div className="w-1/2 flex flex-col bg-slate-950">
+        <div className="w-1/2 flex flex-col bg-[#0f1014]">
           {/* Editor Container */}
           <div className="flex-1 overflow-hidden relative">
             <Editor
@@ -494,7 +494,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
 
           {/* BOTTOM TEST CONSOLE & VERDICTS DRAWER */}
           <div
-            className={`border-t border-white/10 bg-slate-900/90 backdrop-blur-md flex flex-col transition-all duration-200 ${
+            className={`border-t border-white/[0.08] bg-[#15161c]/95 backdrop-blur-md flex flex-col transition-all duration-200 ${
               isConsoleExpanded ? 'h-72' : 'h-10'
             }`}
           >

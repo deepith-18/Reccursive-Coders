@@ -13,6 +13,7 @@ import {
   BookOpen,
   Loader2,
   CheckCircle2,
+  ArrowRight,
 } from 'lucide-react';
 import { CodingWorkspace } from './CodingWorkspace';
 
@@ -63,11 +64,11 @@ export const StudentPracticePage: React.FC = () => {
   const getDifficultyBadge = (diff: QuestionDifficulty) => {
     switch (diff) {
       case 'EASY':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+        return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25';
       case 'MEDIUM':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+        return 'bg-amber-500/10 text-amber-300 border-amber-500/25';
       case 'HARD':
-        return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+        return 'bg-rose-500/10 text-rose-300 border-rose-500/25';
     }
   };
 
@@ -75,37 +76,37 @@ export const StudentPracticePage: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2.5">
-          <Code className="w-7 h-7 text-primary-400" />
+        <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
+          <Code className="w-6 h-6 text-emerald-400" />
           Coding Practice
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Sharpen your algorithmic problem solving skills with curated placement coding questions.
+        <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+          Curated algorithmic problem bank with in-browser compilation &amp; test verification.
         </p>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between p-4 rounded-xl border border-white/10 bg-card/40 backdrop-blur-md">
+      <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between p-3.5 rounded-2xl glass-card">
         <form onSubmit={handleSearchSubmit} className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
           <input
             type="text"
             placeholder="Search problem title, algorithms, data structures..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-background/80 border border-white/10 text-white text-sm focus:outline-none focus:border-primary transition"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:border-violet-500 transition-colors"
           />
         </form>
 
-        <div className="flex items-center gap-1 bg-background/80 p-1 rounded-lg border border-white/10 text-xs self-start md:self-auto">
+        <div className="flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/[0.06] text-xs self-start md:self-auto">
           {['ALL', 'EASY', 'MEDIUM', 'HARD'].map((diff) => (
             <button
               key={diff}
               onClick={() => setSelectedDifficulty(diff)}
-              className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                 selectedDifficulty === diff
-                  ? 'bg-primary text-primary-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-white'
+                  ? 'bg-white/10 text-white shadow-sm border border-white/10'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
               {diff}
@@ -117,14 +118,14 @@ export const StudentPracticePage: React.FC = () => {
       {/* Questions Grid */}
       {isLoading ? (
         <div className="py-24 text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary-400 mb-3" />
-          <p className="text-sm text-muted-foreground">Loading practice problem bank...</p>
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-violet-400 mb-3" />
+          <p className="text-xs text-zinc-400">Loading practice problem bank...</p>
         </div>
       ) : questions.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl border border-dashed border-white/10 bg-card/30">
-          <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-white mb-1">No Practice Problems Found</h3>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+        <div className="p-12 text-center rounded-2xl glass-card">
+          <BookOpen className="w-10 h-10 text-zinc-500 mx-auto mb-3" />
+          <h3 className="text-base font-bold text-white mb-1">No Practice Problems Found</h3>
+          <p className="text-xs text-zinc-400 max-w-md mx-auto">
             Try adjusting your search keywords or difficulty filters.
           </p>
         </div>
@@ -134,39 +135,39 @@ export const StudentPracticePage: React.FC = () => {
             <div
               key={q.id}
               onClick={() => handleOpenProblem(q.id)}
-              className="p-5 rounded-xl border border-white/10 bg-card/40 hover:bg-card/80 hover:border-white/20 transition-all cursor-pointer flex flex-col justify-between group"
+              className="p-5 rounded-2xl glass-card cursor-pointer flex flex-col justify-between group"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getDifficultyBadge(
+                    className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${getDifficultyBadge(
                       q.difficulty
                     )}`}
                   >
                     {q.difficulty}
                   </span>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2.5 text-[11px] text-zinc-400 font-mono">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
+                      <Clock className="w-3 h-3 text-zinc-500" />
                       {q.timeLimitMs}ms
                     </span>
                     <span className="flex items-center gap-1">
-                      <Cpu className="w-3.5 h-3.5" />
+                      <Cpu className="w-3 h-3 text-zinc-500" />
                       {q.memoryLimitMb}MB
                     </span>
                   </div>
                 </div>
 
-                <h3 className="text-base font-bold text-white group-hover:text-primary-300 transition">
+                <h3 className="text-base font-bold text-white group-hover:text-violet-300 transition-colors">
                   {q.title}
                 </h3>
 
                 {q.tags && (
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-1.5">
                     {q.tags.split(',').map((tag, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-0.5 rounded-md bg-white/5 text-[11px] text-slate-300 border border-white/5"
+                        className="px-2 py-0.5 rounded-md bg-white/[0.04] text-[10px] text-zinc-400 border border-white/[0.06] font-medium"
                       >
                         {tag.trim()}
                       </span>
@@ -175,13 +176,14 @@ export const StudentPracticePage: React.FC = () => {
                 )}
               </div>
 
-              <div className="pt-4 mt-2 border-t border-white/5 flex items-center justify-between text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
+              <div className="pt-4 mt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
+                <span className="flex items-center gap-1.5 text-[11px]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                   {q.sampleCasesCount} sample test cases
                 </span>
-                <span className="text-primary-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                  Solve &rarr;
+                <span className="text-violet-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 text-xs">
+                  <span>Solve</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </div>
             </div>

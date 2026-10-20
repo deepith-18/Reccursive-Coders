@@ -12,7 +12,10 @@ import {
   Server,
   ArrowRight,
   Terminal,
-  Zap,
+  Sparkles,
+  Cpu,
+  Trophy,
+  Flame,
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
@@ -37,66 +40,101 @@ export const LandingPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 space-y-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 space-y-16">
       {/* Hero Section */}
-      <div className="text-center space-y-6 max-w-3xl mx-auto pt-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-sm">
-          <Zap className="w-3.5 h-3.5" />
-          <span>Next-Gen Placement &amp; Training Platform</span>
+      <div className="text-center space-y-6 max-w-3xl mx-auto pt-4">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/[0.04] text-zinc-300 border border-white/[0.1] shadow-inner backdrop-blur-md">
+          <Sparkles className="w-3.5 h-3.5 text-violet-400" />
+          <span>Next-Generation Technical Placement Suite</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
-          Supercharge Tech Placements with{' '}
-          <span className="bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.12]">
+          Accelerate Engineering Placements with{' '}
+          <span className="bg-gradient-to-r from-violet-400 via-fuchsia-300 to-amber-200 bg-clip-text text-transparent">
             Recursive Coders
           </span>
         </h1>
 
-        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-          The all-in-one suite for campus recruitment training. Real-time Monaco coding sandbox,
-          automated Judge0 test evaluation, batch-isolated assignments, and competitive cohort leaderboards.
+        <p className="text-base sm:text-lg text-zinc-400 leading-relaxed font-normal">
+          The unified technical assessment platform. Real-time in-browser code execution,
+          automated daily streak tracking, batch assignments, and cohort leaderboards.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+        <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 hover:scale-105 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-sm shadow-xl shadow-white/5 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
-            <span>Sign In to Your Workspace</span>
+            <span>Launch Workspace</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
           <a
             href="http://localhost:8080/swagger-ui.html"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-secondary/80 hover:bg-secondary text-white font-semibold text-sm border border-white/10 hover:border-white/20 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white font-semibold text-sm border border-white/[0.08] transition-all"
           >
-            <Terminal className="w-4 h-4 text-cyan-400" />
-            <span>OpenAPI Documentation</span>
+            <Terminal className="w-4 h-4 text-emerald-400" />
+            <span>OpenAPI Docs</span>
           </a>
         </div>
       </div>
 
-      {/* Backend API Health Live Probe */}
-      <div className="p-6 rounded-3xl glass-card border border-white/10 space-y-4 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/5 pb-4">
+      {/* Metrics Highlights Bar */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="p-4 rounded-2xl glass-card text-center space-y-1">
+          <div className="text-2xl font-black text-white flex items-center justify-center gap-1.5">
+            <Cpu className="w-5 h-5 text-emerald-400" />
+            <span>&lt; 50ms</span>
+          </div>
+          <div className="text-xs text-zinc-400 font-medium">Native Sandbox Runtime</div>
+        </div>
+
+        <div className="p-4 rounded-2xl glass-card text-center space-y-1">
+          <div className="text-2xl font-black text-white flex items-center justify-center gap-1.5">
+            <Flame className="w-5 h-5 text-amber-400" />
+            <span>IST Stored</span>
+          </div>
+          <div className="text-xs text-zinc-400 font-medium">Asia/Kolkata Daily Streaks</div>
+        </div>
+
+        <div className="p-4 rounded-2xl glass-card text-center space-y-1">
+          <div className="text-2xl font-black text-white flex items-center justify-center gap-1.5">
+            <Trophy className="w-5 h-5 text-yellow-400" />
+            <span>Ranked</span>
+          </div>
+          <div className="text-xs text-zinc-400 font-medium">Cohort Batch Leaderboards</div>
+        </div>
+
+        <div className="p-4 rounded-2xl glass-card text-center space-y-1">
+          <div className="text-2xl font-black text-white flex items-center justify-center gap-1.5">
+            <Shield className="w-5 h-5 text-violet-400" />
+            <span>Role-Isolated</span>
+          </div>
+          <div className="text-xs text-zinc-400 font-medium">Zero Cross-Portal Leakage</div>
+        </div>
+      </div>
+
+      {/* Live System Infrastructure Health Probe */}
+      <div className="p-6 rounded-3xl glass-card space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/[0.06] pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-              <Server className="w-5 h-5" />
+            <div className="p-2.5 rounded-xl bg-white/[0.05] text-zinc-300 border border-white/[0.1]">
+              <Server className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                System Infrastructure Status
+              <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                System Health &amp; Runtime Status
               </h2>
-              <p className="text-xs text-muted-foreground">
-                Spring Boot 3 API &amp; Database Health (<code className="text-indigo-400">GET /api/v1/health</code>)
+              <p className="text-xs text-zinc-400">
+                Spring Boot 3 API &amp; Database Probe (<code className="text-zinc-300">GET /api/v1/health</code>)
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {isLoading && (
-              <span className="text-xs text-muted-foreground animate-pulse">Probing API...</span>
+              <span className="text-xs text-zinc-400 animate-pulse">Probing system...</span>
             )}
             {healthData && (
               <StatusBadge status={healthData.status === 'UP' ? 'HEALTHY' : 'DOWN'} />
@@ -114,98 +152,98 @@ export const LandingPage: React.FC = () => {
 
         {healthData ? (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-secondary/30 p-3 rounded-xl border border-white/5">
-              <span className="text-[11px] text-muted-foreground block font-medium">Service</span>
+            <div className="bg-white/[0.02] p-3 rounded-xl border border-white/[0.04]">
+              <span className="text-[11px] text-zinc-400 block font-medium">Service</span>
               <span className="text-xs font-mono font-bold text-white">{healthData.service}</span>
             </div>
-            <div className="bg-secondary/30 p-3 rounded-xl border border-white/5">
-              <span className="text-[11px] text-muted-foreground block font-medium">Profile</span>
-              <span className="text-xs font-mono font-bold text-indigo-400">
+            <div className="bg-white/[0.02] p-3 rounded-xl border border-white/[0.04]">
+              <span className="text-[11px] text-zinc-400 block font-medium">Profile</span>
+              <span className="text-xs font-mono font-bold text-violet-400">
                 {healthData.activeProfile || 'development'}
               </span>
             </div>
-            <div className="bg-secondary/30 p-3 rounded-xl border border-white/5">
-              <span className="text-[11px] text-muted-foreground block font-medium">Storage Engine</span>
+            <div className="bg-white/[0.02] p-3 rounded-xl border border-white/[0.04]">
+              <span className="text-[11px] text-zinc-400 block font-medium">Storage Engine</span>
               <span className="text-xs font-mono font-bold text-emerald-400">
                 {String((healthData.details as Record<string, unknown>)?.['database'] ? 'Postgres / H2' : 'Connected')}
               </span>
             </div>
-            <div className="bg-secondary/30 p-3 rounded-xl border border-white/5">
-              <span className="text-[11px] text-muted-foreground block font-medium">Execution Engine</span>
-              <span className="text-xs font-mono font-bold text-cyan-400">Host Python / Java / Judge0</span>
+            <div className="bg-white/[0.02] p-3 rounded-xl border border-white/[0.04]">
+              <span className="text-[11px] text-zinc-400 block font-medium">Sandbox Compilers</span>
+              <span className="text-xs font-mono font-bold text-amber-300">Python 3.11 / Java 21 / Judge0</span>
             </div>
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">
-            Backend is running on <code className="text-indigo-400">http://localhost:8080</code>.
+          <p className="text-xs text-zinc-400">
+            Backend API is running on <code className="text-zinc-200">http://localhost:8080</code>.
           </p>
         )}
       </div>
 
       {/* Feature Pillars */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 rounded-3xl glass-card border border-white/10 space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
-            <GraduationCap className="w-6 h-6" />
+        <div className="p-6 rounded-3xl glass-card space-y-4">
+          <div className="w-11 h-11 rounded-2xl bg-violet-500/10 text-violet-400 border border-violet-500/20 flex items-center justify-center">
+            <GraduationCap className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Student Workspace</h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              Monaco editor with real-time test runner, Asia/Kolkata daily streaks, and batch-assigned problems.
+            <h3 className="text-base font-bold text-white">Student Workspace</h3>
+            <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+              In-browser coding sandbox with instant sample runs, daily activity heatmaps, and batch assignments.
             </p>
           </div>
-          <ul className="text-xs text-muted-foreground space-y-2 border-t border-white/5 pt-3">
+          <ul className="text-xs text-zinc-400 space-y-2 border-t border-white/[0.06] pt-3">
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
-              Python 3, Java 21, and C++ compilers
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Full Python 3, Java 21, and C++ runners</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
-              Instant custom STDIN execution &amp; output
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Interactive custom STDIN testing</span>
             </li>
           </ul>
         </div>
 
-        <div className="p-6 rounded-3xl glass-card border border-white/10 space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center">
-            <Briefcase className="w-6 h-6" />
+        <div className="p-6 rounded-3xl glass-card space-y-4">
+          <div className="w-11 h-11 rounded-2xl bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20 flex items-center justify-center">
+            <Briefcase className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Trainer Command</h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              Cohort management, coding problem authoring with sample/hidden test cases, and cohort leaderboard tracking.
+            <h3 className="text-base font-bold text-white">Trainer Command</h3>
+            <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+              Manage cohort batches, author questions with sample &amp; hidden test cases, and review student progress.
             </p>
           </div>
-          <ul className="text-xs text-muted-foreground space-y-2 border-t border-white/5 pt-3">
+          <ul className="text-xs text-zinc-400 space-y-2 border-t border-white/[0.06] pt-3">
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-purple-400" />
-              Markdown problem description builder
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Question builder with starter code templates</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-purple-400" />
-              Batch performance analytics &amp; submissions
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Batch-scoped leaderboards &amp; submissions</span>
             </li>
           </ul>
         </div>
 
-        <div className="p-6 rounded-3xl glass-card border border-white/10 space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center">
-            <Shield className="w-6 h-6" />
+        <div className="p-6 rounded-3xl glass-card space-y-4">
+          <div className="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
+            <Shield className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">Administrator Hub</h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              Role-based access control, CSV bulk user provisioning, secure trainer impersonation, and audit logging.
+            <h3 className="text-base font-bold text-white">Administrator Hub</h3>
+            <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+              Enterprise control center for bulk student CSV uploads, batch provisioning, and secure user management.
             </p>
           </div>
-          <ul className="text-xs text-muted-foreground space-y-2 border-t border-white/5 pt-3">
+          <ul className="text-xs text-zinc-400 space-y-2 border-t border-white/[0.06] pt-3">
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-rose-400" />
-              Bulk student CSV uploads
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Bulk CSV user provisioning with temporary passwords</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-rose-400" />
-              Global system monitoring &amp; audit trails
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Security audit trails &amp; trainer impersonation</span>
             </li>
           </ul>
         </div>

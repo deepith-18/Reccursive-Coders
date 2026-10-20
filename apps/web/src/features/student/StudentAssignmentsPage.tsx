@@ -13,6 +13,7 @@ import {
   Loader2,
   ChevronRight,
   Code,
+  ArrowRight,
 } from 'lucide-react';
 import { CodingWorkspace } from './CodingWorkspace';
 
@@ -78,11 +79,11 @@ export const StudentAssignmentsPage: React.FC = () => {
   const getDifficultyBadge = (diff: QuestionDifficulty) => {
     switch (diff) {
       case 'EASY':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+        return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25';
       case 'MEDIUM':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+        return 'bg-amber-500/10 text-amber-300 border-amber-500/25';
       case 'HARD':
-        return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+        return 'bg-rose-500/10 text-rose-300 border-rose-500/25';
     }
   };
 
@@ -93,42 +94,42 @@ export const StudentAssignmentsPage: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2.5">
-          <FileText className="w-7 h-7 text-primary-400" />
+        <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2.5">
+          <FileText className="w-6 h-6 text-amber-400" />
           Batch Assignments
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-xs sm:text-sm text-zinc-400 mt-1">
           Complete mandatory coding assignments scheduled by your cohort trainers before the deadline.
         </p>
       </div>
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl border border-white/10 bg-card/60 backdrop-blur-md">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Total Assignments</p>
-          <p className="text-2xl font-black text-white mt-1">{assignments.length}</p>
+        <div className="p-4 rounded-2xl glass-card space-y-1">
+          <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">Total Assignments</p>
+          <p className="text-2xl font-black text-white">{assignments.length}</p>
         </div>
-        <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 backdrop-blur-md">
-          <p className="text-xs font-medium text-blue-400 uppercase tracking-wider">Active Tasks</p>
-          <p className="text-2xl font-black text-blue-400 mt-1">{activeAssignments.length}</p>
+        <div className="p-4 rounded-2xl glass-card space-y-1">
+          <p className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Active Tasks</p>
+          <p className="text-2xl font-black text-emerald-300">{activeAssignments.length}</p>
         </div>
-        <div className="p-4 rounded-xl border border-rose-500/20 bg-rose-500/5 backdrop-blur-md">
-          <p className="text-xs font-medium text-rose-400 uppercase tracking-wider">Past Due / Closed</p>
-          <p className="text-2xl font-black text-rose-400 mt-1">{pastDueAssignments.length}</p>
+        <div className="p-4 rounded-2xl glass-card space-y-1">
+          <p className="text-[11px] font-semibold text-rose-400 uppercase tracking-wider">Past Due / Closed</p>
+          <p className="text-2xl font-black text-rose-300">{pastDueAssignments.length}</p>
         </div>
       </div>
 
       {/* Assignment List */}
       {isLoading ? (
         <div className="py-24 text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary-400 mb-3" />
-          <p className="text-sm text-muted-foreground">Loading cohort assignments...</p>
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-violet-400 mb-3" />
+          <p className="text-xs text-zinc-400">Loading cohort assignments...</p>
         </div>
       ) : assignments.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl border border-dashed border-white/10 bg-card/30">
-          <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-white mb-1">No Assignments Assigned Yet</h3>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+        <div className="p-12 text-center rounded-2xl glass-card">
+          <FileText className="w-10 h-10 text-zinc-500 mx-auto mb-3" />
+          <h3 className="text-base font-bold text-white mb-1">No Assignments Assigned Yet</h3>
+          <p className="text-xs text-zinc-400 max-w-md mx-auto">
             Your trainers haven't published any assignments for your enrolled batch yet. Check back soon!
           </p>
         </div>
@@ -140,46 +141,46 @@ export const StudentAssignmentsPage: React.FC = () => {
               <div
                 key={assignment.id}
                 onClick={() => handleOpenAssignment(assignment.id)}
-                className="p-5 rounded-xl border border-white/10 bg-card/40 hover:bg-card/80 hover:border-white/20 transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+                className="p-5 rounded-2xl glass-card cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
               >
                 <div className="space-y-2.5 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                      className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${
                         dueStatus.isPast
-                          ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                          ? 'bg-rose-500/10 text-rose-300 border-rose-500/25'
                           : dueStatus.isUrgent
-                          ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                          ? 'bg-amber-500/10 text-amber-300 border-amber-500/25'
+                          : 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25'
                       }`}
                     >
                       {dueStatus.text}
                     </span>
-                    <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-white/5 text-slate-300 border border-white/10">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-white/[0.04] text-zinc-300 border border-white/[0.08]">
                       {assignment.batchCode}
                     </span>
-                    <h3 className="text-base font-bold text-white group-hover:text-primary-300 transition">
+                    <h3 className="text-base font-bold text-white group-hover:text-violet-300 transition-colors">
                       {assignment.title}
                     </h3>
                   </div>
 
                   {assignment.description && (
-                    <p className="text-xs text-muted-foreground line-clamp-2">
+                    <p className="text-xs text-zinc-400 line-clamp-2">
                       {assignment.description}
                     </p>
                   )}
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1 text-slate-300 font-medium">
-                      <Award className="w-3.5 h-3.5 text-primary-400" />
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-400">
+                    <span className="flex items-center gap-1.5 font-medium text-zinc-300">
+                      <Award className="w-3.5 h-3.5 text-amber-400" />
                       {assignment.totalPoints} Total Points
                     </span>
-                    <span className="flex items-center gap-1 text-slate-300 font-medium">
-                      <Code className="w-3.5 h-3.5 text-primary-400" />
+                    <span className="flex items-center gap-1.5 font-medium text-zinc-300">
+                      <Code className="w-3.5 h-3.5 text-emerald-400" />
                       {assignment.questionCount} Problems
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5" />
+                    <span className="flex items-center gap-1.5 font-mono text-[11px]">
+                      <Calendar className="w-3.5 h-3.5 text-zinc-500" />
                       Due: {new Date(assignment.dueDate).toLocaleDateString()} at{' '}
                       {new Date(assignment.dueDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
@@ -187,8 +188,9 @@ export const StudentAssignmentsPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2 self-end md:self-center shrink-0">
-                  <span className="text-xs text-primary-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                    View Problems &rarr;
+                  <span className="text-xs text-violet-400 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                    <span>View Problems</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>
@@ -199,50 +201,52 @@ export const StudentAssignmentsPage: React.FC = () => {
 
       {/* ASSIGNMENT DETAILS MODAL */}
       {selectedAssignment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-card border border-white/15 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+          <div className="glass-card rounded-3xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
             {/* Header */}
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-muted/40">
+            <div className="px-6 py-4 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
               <div className="flex items-center gap-3">
-                <FileText className="w-5 h-5 text-primary-400" />
+                <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                  <FileText className="w-5 h-5" />
+                </div>
                 <div>
-                  <h2 className="text-lg font-bold text-white">{selectedAssignment.title}</h2>
-                  <p className="text-xs text-muted-foreground font-mono">
+                  <h2 className="text-base font-bold text-white">{selectedAssignment.title}</h2>
+                  <p className="text-xs text-zinc-400 font-mono">
                     Batch: {selectedAssignment.batchName} ({selectedAssignment.batchCode})
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedAssignment(null)}
-                className="text-muted-foreground hover:text-white"
+                className="p-1.5 rounded-xl hover:bg-white/[0.05] text-zinc-400 hover:text-white transition"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-6 space-y-5">
               {/* Assignment Meta */}
-              <div className="flex flex-wrap items-center justify-between gap-3 text-xs bg-muted/20 p-3.5 rounded-xl border border-white/10">
+              <div className="flex flex-wrap items-center justify-between gap-3 text-xs bg-white/[0.02] p-3.5 rounded-2xl border border-white/[0.06]">
                 <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1 text-slate-200">
-                    <Calendar className="w-4 h-4 text-primary-400" />
+                  <span className="flex items-center gap-1.5 text-zinc-300">
+                    <Calendar className="w-4 h-4 text-violet-400" />
                     Deadline: {new Date(selectedAssignment.dueDate).toLocaleString()}
                   </span>
-                  <span className="flex items-center gap-1 text-slate-200">
-                    <Award className="w-4 h-4 text-primary-400" />
+                  <span className="flex items-center gap-1.5 text-zinc-300">
+                    <Award className="w-4 h-4 text-amber-400" />
                     Total Points: {selectedAssignment.totalPoints} pts
                   </span>
                 </div>
                 {selectedAssignment.isPastDue && (
-                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-300 border border-rose-500/25">
                     Past Due
                   </span>
                 )}
               </div>
 
               {selectedAssignment.description && (
-                <div className="text-sm text-slate-300 leading-relaxed bg-white/5 p-4 rounded-xl border border-white/5">
+                <div className="text-xs text-zinc-300 leading-relaxed bg-white/[0.02] p-4 rounded-2xl border border-white/[0.06]">
                   {selectedAssignment.description}
                 </div>
               )}
@@ -250,20 +254,20 @@ export const StudentAssignmentsPage: React.FC = () => {
               {/* Questions List */}
               <div className="space-y-3">
                 <h3 className="text-sm font-bold text-white flex items-center justify-between">
-                  <span>Assigned Questions ({selectedAssignment.questions.length})</span>
-                  <span className="text-xs text-muted-foreground">Click problem to view statement &amp; examples</span>
+                  <span>Assigned Problems ({selectedAssignment.questions.length})</span>
+                  <span className="text-xs text-zinc-500">Click problem to open interactive workspace</span>
                 </h3>
 
                 {selectedAssignment.questions.map((q, idx) => (
                   <div
                     key={q.questionId}
                     onClick={() => handleOpenQuestion(q.questionId)}
-                    className="p-4 rounded-xl border border-white/10 bg-background/60 hover:bg-background/90 hover:border-white/20 transition cursor-pointer flex items-center justify-between gap-4 group"
+                    className="p-4 rounded-2xl glass-card cursor-pointer flex items-center justify-between gap-4 group"
                   >
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono text-muted-foreground">#{idx + 1}</span>
-                        <h4 className="text-sm font-bold text-white group-hover:text-primary-300 transition">
+                        <span className="text-xs font-mono text-zinc-500">#{idx + 1}</span>
+                        <h4 className="text-sm font-bold text-white group-hover:text-violet-300 transition-colors">
                           {q.title}
                         </h4>
                         <span
@@ -274,14 +278,14 @@ export const StudentAssignmentsPage: React.FC = () => {
                           {q.difficulty}
                         </span>
                       </div>
-                      {q.tags && <p className="text-[11px] text-muted-foreground">{q.tags}</p>}
+                      {q.tags && <p className="text-[11px] text-zinc-400">{q.tags}</p>}
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="px-2.5 py-1 rounded-md bg-primary/10 text-primary-300 border border-primary/20 text-xs font-bold">
+                      <span className="px-2.5 py-1 rounded-lg bg-violet-500/10 text-violet-300 border border-violet-500/20 text-xs font-bold">
                         {q.points} pts
                       </span>
-                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-white group-hover:translate-x-0.5 transition" />
+                      <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition" />
                     </div>
                   </div>
                 ))}

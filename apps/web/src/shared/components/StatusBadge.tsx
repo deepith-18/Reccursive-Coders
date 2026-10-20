@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@placement/ui';
 
 interface StatusBadgeProps {
-  status: 'UP' | 'DOWN' | 'DEGRADED' | 'STUDENT' | 'TRAINER' | 'ADMIN' | string;
+  status: 'UP' | 'DOWN' | 'DEGRADED' | 'STUDENT' | 'TRAINER' | 'ADMIN' | 'HEALTHY' | string;
   className?: string;
 }
 
@@ -10,31 +10,38 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) =
   const getBadgeStyle = () => {
     switch (status.toUpperCase()) {
       case 'UP':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      case 'HEALTHY':
+      case 'ACCEPTED':
+      case 'ACTIVE':
+        return 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25';
       case 'DOWN':
-        return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+      case 'FAILED':
+      case 'REJECTED':
+        return 'bg-rose-500/10 text-rose-300 border-rose-500/25';
       case 'DEGRADED':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+      case 'PENDING':
+      case 'WARNING':
+        return 'bg-amber-500/10 text-amber-300 border-amber-500/25';
       case 'STUDENT':
-        return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+        return 'bg-violet-500/10 text-violet-300 border-violet-500/25';
       case 'TRAINER':
-        return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+        return 'bg-fuchsia-500/10 text-fuchsia-300 border-fuchsia-500/25';
       case 'ADMIN':
-        return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+        return 'bg-amber-500/10 text-amber-300 border-amber-500/25';
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+        return 'bg-zinc-500/10 text-zinc-300 border-zinc-500/20';
     }
   };
 
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border',
+        'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border backdrop-blur-md tracking-wide',
         getBadgeStyle(),
         className
       )}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-80" />
+      <span className="w-1.5 h-1.5 rounded-full bg-current opacity-90 animate-pulse" />
       {status}
     </span>
   );
