@@ -243,14 +243,14 @@ public class AssessmentServiceImpl implements AssessmentService {
             attempt.setSubmittedAt(Instant.now());
             attempt.setFeedbackNotes("Disqualified due to exceeding " + assessment.getMaxViolationsAllowed() + " tab switch violations.");
             disqualified = true;
-            warningMsg = "⚠️ ASSESSMENT DISQUALIFIED: You have exceeded the maximum allowed violations (" +
+            warningMsg = "ASSESSMENT DISQUALIFIED: You have exceeded the maximum allowed violations (" +
                     assessment.getMaxViolationsAllowed() + "). Your test has been terminated.";
             log.warn("Student {} disqualified on assessment {} due to {} violations",
                     student.getEmail(), assessment.getTitle(), attempt.getTabSwitchCount());
         } else {
             int strikesLeft = assessment.getMaxViolationsAllowed() - attempt.getTabSwitchCount();
-            warningMsg = "⚠️ Warning (" + attempt.getTabSwitchCount() + "/" + assessment.getMaxViolationsAllowed() +
-                    "): Switching tabs is strictly monitored. " + strikesLeft + " strike(s) remaining before disqualification!";
+            warningMsg = "Warning (" + attempt.getTabSwitchCount() + "/" + assessment.getMaxViolationsAllowed() +
+                    "): Switching tabs is strictly monitored. " + strikesLeft + " strike(s) remaining before disqualification.";
         }
 
         attemptRepository.save(attempt);

@@ -104,13 +104,89 @@ public class Judge0Client {
             return executePythonLocally(code, stdin, expected);
         }
 
-        // 2. Java execution via host javac / java
-        if (langId == 62) {
+        // 2. Java 21 execution via host javac / java
+        if (langId == 62 || langId == 91) {
             return executeJavaLocally(code, stdin, expected);
         }
 
-        // 3. Fallback deterministic execution for C++ or when host tools are not present
+        // 3. JavaScript execution via Node.js
+        if (langId == 63) {
+            return executeJavaScriptLocally(code, stdin, expected);
+        }
+
+        // 4. Fallback deterministic execution for C++ or when host tools are not present
         return executeSimulated(code, stdin, expected);
+    }
+
+    private CodeExecutionResult executeJavaScriptLocally(String code, String stdin, String expected) {
+        Path tempFile = null;
+        long startTime = System.currentTimeMillis();
+        try {
+            tempFile = Files.createTempFile("solution_", ".js");
+            Files.writeString(tempFile, code, StandardCharsets.UTF_8);
+
+            ProcessBuilder pb = new ProcessBuilder("node", tempFile.toAbsolutePath().toString());
+            Process process = pb.start();
+
+            if (!stdin.isEmpty()) {
+                try (OutputStream os = process.getOutputStream()) {
+                    os.write(stdin.getBytes(StandardCharsets.UTF_8));
+                    os.flush();
+                }
+            } else {
+                process.getOutputStream().close();
+            }
+
+            boolean finished = process.waitFor(5, TimeUnit.SECONDS);
+            long elapsedMs = System.currentTimeMillis() - startTime;
+
+            if (!finished) {
+                process.destroyForcibly();
+                return CodeExecutionResult.builder()
+                        .status(Judge0Status.TIME_LIMIT_EXCEEDED)
+                        .passed(false)
+                        .executionTimeMs((int) elapsedMs)
+                        .stderr("Time Limit Exceeded (5000ms)")
+                        .build();
+            }
+
+            String stdout = readStream(process.getInputStream());
+            String stderr = readStream(process.getErrorStream());
+            int exitCode = process.exitValue();
+
+            if (exitCode != 0) {
+                boolean isCompile = stderr.contains("SyntaxError");
+                return CodeExecutionResult.builder()
+                        .status(isCompile ? Judge0Status.COMPILATION_ERROR : Judge0Status.RUNTIME_ERROR_OTHER)
+                        .passed(false)
+                        .stdout(stdout)
+                        .stderr(stderr)
+                        .compileOutput(isCompile ? stderr : null)
+                        .executionTimeMs((int) elapsedMs)
+                        .build();
+            }
+
+            boolean passed = (expected == null || stdout.trim().equals(expected.trim()));
+            return CodeExecutionResult.builder()
+                    .status(passed ? Judge0Status.ACCEPTED : Judge0Status.WRONG_ANSWER)
+                    .passed(passed)
+                    .stdout(stdout)
+                    .stderr(stderr)
+                    .executionTimeMs((int) elapsedMs)
+                    .memoryKb(12400)
+                    .build();
+
+        } catch (Exception ex) {
+            log.warn("Host node execution error, falling back to simulated engine: {}", ex.getMessage());
+            return executeSimulated(code, stdin, expected);
+        } finally {
+            if (tempFile != null) {
+                try {
+                    Files.deleteIfExists(tempFile);
+                } catch (Exception ignored) {
+                }
+            }
+        }
     }
 
     private CodeExecutionResult executePythonLocally(String code, String stdin, String expected) {

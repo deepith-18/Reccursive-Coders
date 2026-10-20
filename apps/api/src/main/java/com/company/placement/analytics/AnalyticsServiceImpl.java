@@ -65,6 +65,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         languages.put("PYTHON", submissionRepository.countByLanguage(ProgrammingLanguage.PYTHON));
         languages.put("JAVA", submissionRepository.countByLanguage(ProgrammingLanguage.JAVA));
         languages.put("CPP", submissionRepository.countByLanguage(ProgrammingLanguage.CPP));
+        languages.put("JAVASCRIPT", submissionRepository.countByLanguage(ProgrammingLanguage.JAVASCRIPT));
 
         return AnalyticsOverviewDto.builder()
                 .totalStudents(students)

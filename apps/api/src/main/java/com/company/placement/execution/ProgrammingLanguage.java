@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ProgrammingLanguage {
-    PYTHON(71, "Python (3.8.1)", "python"),
-    JAVA(62, "Java (OpenJDK 13.0.1)", "java"),
-    CPP(54, "C++ (GCC 9.2.0)", "cpp");
+    PYTHON(71, "Python (3.10)", "python"),
+    JAVA(91, "Java 21 (OpenJDK 21.0.2)", "java"),
+    CPP(54, "C++ (GCC 13.2.0)", "cpp"),
+    JAVASCRIPT(63, "JavaScript (Node.js 20)", "javascript");
 
     private final int judge0Id;
     private final String displayName;
@@ -17,7 +18,9 @@ public enum ProgrammingLanguage {
     public static ProgrammingLanguage fromString(String text) {
         if (text == null) return PYTHON;
         for (ProgrammingLanguage lang : values()) {
-            if (lang.name().equalsIgnoreCase(text) || lang.alias.equalsIgnoreCase(text)) {
+            if (lang.name().equalsIgnoreCase(text) || 
+                lang.alias.equalsIgnoreCase(text) ||
+                ("js".equalsIgnoreCase(text) && lang == JAVASCRIPT)) {
                 return lang;
             }
         }

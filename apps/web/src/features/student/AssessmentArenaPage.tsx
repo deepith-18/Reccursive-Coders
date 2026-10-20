@@ -25,11 +25,25 @@ export function AssessmentArenaPage() {
   const navigate = useNavigate();
 
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
-  const [selectedLanguage, setSelectedLanguage] = useState<'python' | 'java' | 'cpp'>('python');
+  const [selectedLanguage, setSelectedLanguage] = useState<'python' | 'java' | 'javascript' | 'cpp'>('python');
   const [codeAnswers, setCodeAnswers] = useState<Record<string, string>>({});
   const [reviewedQuestions, setReviewedQuestions] = useState<Record<string, boolean>>({});
   const [runOutputs, setRunOutputs] = useState<Record<string, string>>({});
   const [isRunningCode, setIsRunningCode] = useState(false);
+
+  const getBlankStarterCode = (lang: string, title: string) => {
+    switch (lang) {
+      case 'java':
+        return `// Java 21 (OpenJDK 21.0.2)\n// Problem: ${title}\nimport java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // Write your solution here\n    }\n}\n`;
+      case 'javascript':
+        return `// JavaScript (Node.js 20)\n// Problem: ${title}\n\nfunction solution() {\n    // Write your solution here\n}\n`;
+      case 'cpp':
+        return `// C++ (GCC 13.2.0)\n// Problem: ${title}\n#include <iostream>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    return 0;\n}\n`;
+      case 'python':
+      default:
+        return `# Python 3.10\n# Problem: ${title}\n\ndef solve():\n    # Write your solution here\n    pass\n`;
+    }
+  };
 
   // Proctoring & Violation States
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -168,9 +182,9 @@ export function AssessmentArenaPage() {
         setViolationCount(newCount);
         if (newCount >= 3) {
           setIsDisqualified(true);
-          setLastWarningMsg('⚠️ Maximum tab-switch strikes (3/3) exceeded! Your assessment has been disqualified.');
+          setLastWarningMsg('Maximum tab-switch strikes (3/3) exceeded. Your assessment has been disqualified.');
         } else {
-          setLastWarningMsg(`⚠️ Warning (${newCount}/3 strikes): Tab switch detected. Switching tabs is strictly monitored!`);
+          setLastWarningMsg(`Warning (${newCount}/3 strikes): Tab switch detected. Switching tabs is strictly monitored.`);
         }
         setShowWarningModal(true);
       }
@@ -193,7 +207,7 @@ export function AssessmentArenaPage() {
       setIsRunningCode(false);
       setRunOutputs((prev) => ({
         ...prev,
-        [currentQuestion.id]: '✓ Sample Test Cases Passed (2/2)\nExecution Time: 12ms | Memory: 14.2 MB\nOutput matches expected value.',
+        [currentQuestion.id]: 'Sample Test Cases Passed (2/2)\nExecution Time: 12ms | Memory: 14.2 MB\nOutput matches expected value.',
       }));
     }, 1200);
   };
@@ -452,8 +466,9 @@ export function AssessmentArenaPage() {
                 className="bg-obsidian-card border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-cyan-500/50"
               >
                 <option value="python">Python 3.10</option>
-                <option value="java">Java 21</option>
-                <option value="cpp">C++ (GCC 13)</option>
+                <option value="java">Java 21 (OpenJDK 21)</option>
+                <option value="javascript">JavaScript (Node.js 20)</option>
+                <option value="cpp">C++ (GCC 13.2)</option>
               </select>
             </div>
 
@@ -481,10 +496,7 @@ export function AssessmentArenaPage() {
           {/* Editor Code Textarea */}
           <div className="flex-1 p-4 bg-[#0A0E17] font-mono text-xs overflow-hidden flex flex-col">
             <textarea
-              value={
-                codeAnswers[currentQuestion.id] ??
-                `# Solution for ${currentQuestion.title}\nclass Solution:\n    def solve(self, nums: list[int], target: int) -> list[int]:\n        seen = {}\n        for i, val in enumerate(nums):\n            diff = target - val\n            if diff in seen:\n                return [seen[diff], i]\n            seen[val] = i\n        return []\n`
-              }
+              value={codeAnswers[currentQuestion.id] ?? getBlankStarterCode(selectedLanguage, currentQuestion.title)}
               onChange={(e) =>
                 setCodeAnswers((prev) => ({
                   ...prev,

@@ -13,6 +13,7 @@ import { StudentProfilePage } from '@/features/student/StudentProfilePage';
 import { PlacementDrivesPage } from '@/features/student/PlacementDrivesPage';
 import { StudentAssessmentsPage } from '@/features/student/StudentAssessmentsPage';
 import { AssessmentArenaPage } from '@/features/student/AssessmentArenaPage';
+import { CompanyQuestionsPage } from '@/features/student/CompanyQuestionsPage';
 
 // Trainer Portal
 import { TrainerLayout } from '@/features/trainer/TrainerLayout';
@@ -56,6 +57,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <StudentDashboardPage /> },
           { path: 'practice', element: <StudentPracticePage /> },
+          { path: 'company-archive', element: <CompanyQuestionsPage /> },
           { path: 'assignments', element: <StudentAssignmentsPage /> },
           { path: 'assessments', element: <StudentAssessmentsPage /> },
           { path: 'assessments/:id/arena', element: <AssessmentArenaPage /> },

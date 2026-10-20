@@ -72,20 +72,13 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
   const getStarterCode = (lang: ProgrammingLanguage) => {
     switch (lang) {
       case 'PYTHON':
-        return (
-          question.starterCodePython ||
-          'import sys\n\ndef main():\n    # Read input from stdin\n    lines = sys.stdin.read().split()\n    if lines:\n        print(" ".join(lines))\n    else:\n        print("Hello from Python!")\n\nif __name__ == "__main__":\n    main()\n'
-        );
+        return 'import sys\n\ndef main():\n    # Read input from stdin\n    # Write your solution here\n    pass\n\nif __name__ == "__main__":\n    main()\n';
       case 'JAVA':
-        return (
-          question.starterCodeJava ||
-          'import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            System.out.println(sc.nextLine());\n        } else {\n            System.out.println("Hello from Java!");\n        }\n    }\n}\n'
-        );
+        return 'import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // Write your solution here\n    }\n}\n';
+      case 'JAVASCRIPT':
+        return 'const fs = require("fs");\n\nfunction main() {\n    const input = fs.readFileSync(0, "utf-8").trim();\n    // Write your solution here\n}\n\nmain();\n';
       case 'CPP':
-        return (
-          question.starterCodeCpp ||
-          '#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string line;\n    if (getline(cin, line)) {\n        cout << line << endl;\n    } else {\n        cout << "Hello from C++!" << endl;\n    }\n    return 0;\n}\n'
-        );
+        return '#include <iostream>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    return 0;\n}\n';
     }
   };
 
@@ -298,9 +291,10 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
             onChange={(e) => handleLanguageChange(e.target.value as ProgrammingLanguage)}
             className="px-3 py-1.5 rounded-lg bg-background border border-white/10 text-xs font-semibold text-white focus:outline-none focus:border-primary cursor-pointer"
           >
-            <option value="PYTHON">Python (3.8.1)</option>
-            <option value="JAVA">Java (OpenJDK 13)</option>
-            <option value="CPP">C++ (GCC 9.2)</option>
+            <option value="PYTHON">Python (3.10)</option>
+            <option value="JAVA">Java 21 (OpenJDK 21)</option>
+            <option value="JAVASCRIPT">JavaScript (Node.js 20)</option>
+            <option value="CPP">C++ (GCC 13.2)</option>
           </select>
 
           <button
@@ -492,7 +486,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
           <div className="flex-1 overflow-hidden relative">
             <Editor
               height="100%"
-              language={selectedLanguage.toLowerCase() === 'cpp' ? 'cpp' : selectedLanguage.toLowerCase()}
+              language={selectedLanguage === 'CPP' ? 'cpp' : selectedLanguage === 'JAVASCRIPT' ? 'javascript' : selectedLanguage.toLowerCase()}
               theme="vs-dark"
               value={sourceCode}
               onChange={(value) => setSourceCode(value || '')}

@@ -15,6 +15,7 @@ import {
   XCircle,
   Search,
   Download,
+  X,
 } from 'lucide-react';
 
 export function TrainerAssessmentsPage() {
@@ -410,9 +411,10 @@ export function TrainerAssessmentsPage() {
               </h3>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-neutral-400 hover:text-white text-xs px-2.5 py-1 rounded-lg bg-white/5"
+                className="text-neutral-400 hover:text-white text-xs p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                title="Close"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 

@@ -1,6 +1,6 @@
 import { apiClient } from './client';
 
-export type ProgrammingLanguage = 'PYTHON' | 'JAVA' | 'CPP';
+export type ProgrammingLanguage = 'PYTHON' | 'JAVA' | 'CPP' | 'JAVASCRIPT';
 
 export type SubmissionVerdict =
   | 'ACCEPTED'

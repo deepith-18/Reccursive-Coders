@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   placementApi,
   PlacementDriveResponse,
@@ -20,6 +21,7 @@ import {
   MapPin,
   X,
   Send,
+  BookOpen,
 } from 'lucide-react';
 
 export const PlacementDrivesPage: React.FC = () => {
@@ -325,8 +327,19 @@ export const PlacementDrivesPage: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Company Questions Quick Link */}
+                    <div className="pt-2">
+                      <Link
+                        to={`/student/company-archive?company=${encodeURIComponent(drive.companyName)}`}
+                        className="text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 transition-colors"
+                      >
+                        <BookOpen className="w-3 h-3" />
+                        <span>Previous {drive.companyName} Questions &amp; Archive &rarr;</span>
+                      </Link>
+                    </div>
+
                     {/* Bottom Action Footer */}
-                    <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between gap-2">
+                    <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between gap-2">
                       <div className="text-[11px] text-zinc-500 flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
                         <span>Deadline: {new Date(drive.applicationDeadline).toLocaleDateString()}</span>
@@ -463,7 +476,7 @@ export const PlacementDrivesPage: React.FC = () => {
               <div className="flex items-center justify-between text-xs font-bold text-zinc-400 border-b border-white/[0.06] pb-2">
                 <span className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span>Offered 🎉</span>
+                  <span>Offer Extended</span>
                 </span>
                 <span className="font-mono text-zinc-400">{offeredApps.length}</span>
               </div>

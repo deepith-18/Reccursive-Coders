@@ -15,6 +15,7 @@ import {
   XCircle,
   Clock,
   Sparkles,
+  X,
 } from 'lucide-react';
 
 export function StudentAssessmentsPage() {
@@ -309,9 +310,10 @@ export function StudentAssessmentsPage() {
               </div>
               <button
                 onClick={() => setSelectedLeaderboardId(null)}
-                className="text-neutral-400 hover:text-white text-sm px-3 py-1.5 rounded-lg bg-white/5"
+                className="text-neutral-400 hover:text-white text-xs px-3 py-1.5 rounded-lg bg-white/5 flex items-center gap-1.5 transition-colors"
               >
-                ✕ Close
+                <X className="w-3.5 h-3.5" />
+                Close
               </button>
             </div>
 

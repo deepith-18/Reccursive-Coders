@@ -16,6 +16,11 @@ import {
   Swords,
   Play,
   Compass,
+  Rocket,
+  Brain,
+  Code2,
+  Building2,
+  Zap,
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
@@ -74,11 +79,11 @@ public class Solution {
   };
 
   const stories = [
-    { title: 'New batch', icon: '🚀', tag: 'Admissions Open' },
-    { title: 'AI ML', icon: '🧠', tag: 'Deep Learning' },
-    { title: 'Full stack Dev', icon: '💻', tag: 'React & Spring' },
-    { title: 'Inauguration', icon: '🎉', tag: 'Bengaluru Campus' },
-    { title: 'C Programming', icon: '⚡', tag: 'Core Systems' },
+    { title: 'New batch', icon: Rocket, tag: 'Admissions Open' },
+    { title: 'AI ML', icon: Brain, tag: 'Deep Learning' },
+    { title: 'Full stack Dev', icon: Code2, tag: 'React & Spring' },
+    { title: 'Inauguration', icon: Building2, tag: 'Bengaluru Campus' },
+    { title: 'C Programming', icon: Zap, tag: 'Core Systems' },
   ];
 
   const placements = [
@@ -238,8 +243,8 @@ public class Solution {
           {stories.map((story, i) => (
             <div key={i} className="flex flex-col items-center gap-2 shrink-0 group cursor-pointer">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-0.5 bg-gradient-to-tr from-violet-600 via-fuchsia-500 to-amber-400 shadow-md group-hover:scale-110 transition-transform">
-                <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-xl sm:text-2xl border-2 border-black">
-                  {story.icon}
+                <div className="w-full h-full rounded-full bg-black flex items-center justify-center border-2 border-black">
+                  <story.icon className="w-7 h-7 text-cyan-300" />
                 </div>
               </div>
               <span className="text-xs font-bold text-zinc-200 group-hover:text-white transition-colors">

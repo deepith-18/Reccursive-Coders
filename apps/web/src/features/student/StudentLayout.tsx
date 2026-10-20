@@ -1,11 +1,12 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar, NavItem } from '@/shared/components/Sidebar';
-import { LayoutDashboard, Code, FileText, User, Trophy, Briefcase, ShieldAlert } from 'lucide-react';
+import { LayoutDashboard, Code, FileText, User, Trophy, Briefcase, ShieldAlert, Building2 } from 'lucide-react';
 
 const studentNav: NavItem[] = [
   { label: 'Dashboard', to: '/student', icon: LayoutDashboard },
   { label: 'Coding Practice', to: '/student/practice', icon: Code, badge: 'Sandbox' },
+  { label: 'Company Archives', to: '/student/company-archive', icon: Building2, badge: 'Targeted' },
   { label: 'Assignments', to: '/student/assignments', icon: FileText, badge: 'Active' },
   { label: 'Mock Assessments', to: '/student/assessments', icon: ShieldAlert, badge: 'Proctored' },
   { label: 'Placement Drives', to: '/student/placements', icon: Briefcase, badge: 'Hiring' },

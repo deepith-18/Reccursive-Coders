@@ -1,192 +1,213 @@
-# Training & Placement Platform
+# Recursive Coders Platform
 
-A comprehensive, role-based platform designed for training companies to manage students, trainers, assignments, code execution, scoring streaks, and recruitment drives.
-
----
-
-## 🛠 Tech Stack
-
-- **Monorepo**: pnpm workspaces + Turborepo
-- **Backend**: Java 21, Spring Boot 3.3.4, Spring Data JPA, PostgreSQL 16, Flyway, Spring Security (JWT + Refresh Tokens), Springdoc OpenAPI 3.0, MapStruct, Lombok, OpenCSV
-- **Frontend**: React 18, Vite, TypeScript (strict), TanStack Query, React Router v6, Tailwind CSS, Lucide Icons, Axios
-- **Code Execution**: Self-hosted Judge0 (Docker sandbox)
-- **CI / Infra**: GitHub Actions CI, Docker Compose
+A scalable, multi-tenant training and campus recruitment lifecycle platform engineered for technical academies, universities, and enterprise hiring pipelines. The system coordinates candidate skill evaluation, batch cohort management, isolated multi-language code execution, anti-cheat proctored assessment arenas, campus placement drives, and historical company interview question archives.
 
 ---
 
-## 📁 Repository Structure
+## Architecture and System Design
+
+A complete architectural specification including C4 component diagrams, entity-relationship diagrams, sandbox security boundaries, and proctoring sequence flows is available in [System Design Specification](docs/system-design.md). Additional operational documentation includes:
+- [Architecture Overview](docs/architecture.md)
+- [Production Deployment Runbook](docs/deployment.md)
+- [Architectural Decision Records (ADRs)](docs/decisions.md)
+- [REST API Conventions](docs/api-conventions.md)
+
+---
+
+## Technology Stack
+
+- **Monorepo Architecture**: pnpm workspaces with Turborepo task pipeline
+- **Backend Service**: Java 21 OpenJDK, Spring Boot 3.3.4, Spring Data JPA, PostgreSQL 16, Flyway Migrations, Spring Security (JWT with Refresh Token rotation), Springdoc OpenAPI 3.0, MapStruct, Lombok, OpenCSV
+- **Web Application**: React 18, Vite, TypeScript (strict mode), TanStack Query, React Router v6, Tailwind CSS, Lucide Icons, Monaco Editor, Axios
+- **Isolated Code Execution**: Self-hosted Judge0 sandbox in isolated Docker containers with local native fallback runner
+- **Supported Execution Languages**:
+  - Python 3.10 (Judge0 ID 71)
+  - Java 21 (OpenJDK 21.0.2, Judge0 ID 91 / 62)
+  - JavaScript (Node.js 20, Judge0 ID 63)
+  - C++ (GCC 13.2, Judge0 ID 54)
+- **Continuous Integration**: GitHub Actions multi-stage build, lint, and test validation
+
+---
+
+## Repository Structure
 
 ```
 placement-platform/
 ├── apps/
-│   ├── web/                      # React 18 + TS client (Student, Trainer, Admin portals)
-│   └── api/                      # Spring Boot 3.3 modular monolith backend
+│   ├── web/                      # React 18 + TypeScript client (Student, Trainer, Admin portals)
+│   └── api/                      # Spring Boot 3.3.4 modular monolith service
 ├── packages/
-│   ├── ui/                       # Shared UI helper tokens and icons
-│   └── config/                   # Shared tsconfig, eslint, prettier presets
+│   ├── ui/                       # Shared UI components and theme tokens
+│   └── config/                   # Shared TypeScript, ESLint, and Prettier configurations
 ├── infra/
-│   ├── docker-compose.yml        # PostgreSQL 16 + Judge0 stack
-│   └── judge0/                   # Judge0 sandbox configuration
-├── docs/                         # Architecture, API conventions, and ADRs
-└── .github/workflows/ci.yml      # Multi-stage CI pipeline
+│   ├── docker-compose.yml        # PostgreSQL 16 and Judge0 sandbox stack
+│   └── judge0/                   # Judge0 configuration parameters
+├── docs/                         # System design, architecture, deployment, and ADRs
+└── .github/workflows/ci.yml      # CI pipeline configuration
 ```
 
 ---
 
-## 🔑 Default Seed Credentials (Phase 1)
+## Role-Based Access Control and Seed Credentials
 
-| Role | Email | Password | Force Password Change |
+The platform enforces strict role-based authorization across three distinct personas: `STUDENT`, `TRAINER`, and `ADMIN`.
+
+| Persona | Default Email | Default Password | Initial Action Required |
 | :--- | :--- | :--- | :--- |
-| **ADMIN** | `admin@company.com` | `AdminPassword123!` | No |
-| **TRAINER (Created)** | *Assigned by Admin* | `Welcome@2026!` | Yes |
-| **STUDENT (Created / CSV)** | *Assigned by Admin* | `Welcome@2026!` | Yes |
+| **System Administrator** | `admin@company.com` | `AdminPassword123!` | None |
+| **Assigned Trainer** | Configured by Admin | `Welcome@2026!` | Forced password update on first login |
+| **Enrolled Student** | Configured by Admin / CSV | `Welcome@2026!` | Forced password update on first login |
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### 1. Prerequisites
-- **Node.js**: v20+ (tested on v22)
-- **pnpm**: v10+ (`npm install -g pnpm`)
-- **Java**: JDK 21
-- **Docker & Docker Compose**
+- **Node.js**: v20 or higher (tested on Node.js v22)
+- **pnpm**: v10 or higher (`npm install -g pnpm`)
+- **Java**: OpenJDK 21
+- **Docker & Docker Compose** (optional for Judge0 container sandbox)
 
-### 2. Environment Setup
-Copy the template environment file:
+### 2. Configure Environment
+Create the local environment definition file:
 ```bash
 cp .env.example .env
 ```
 
-### 3. Start Infrastructure (PostgreSQL)
-Start the database service:
+### 3. Launch Database Service
+Start the PostgreSQL 16 service:
 ```bash
 cd infra
 docker compose up -d postgres
 ```
-*(To start Judge0 code execution alongside Postgres, run `docker compose --profile full up -d`)*
+*(To launch the full self-hosted Judge0 sandbox alongside PostgreSQL, run `docker compose --profile full up -d`)*
 
-### 4. Run the Backend API
+### 4. Start the Backend API Service
+From the repository root or `apps/api`:
 ```bash
 cd apps/api
-# Runs Flyway migrations (V1 baseline + V2 auth/users) and launches on port 8080
-.\mvnw.cmd clean test spring-boot:run
+# Runs Flyway migrations and starts the service on port 8080
+.\mvnw.cmd spring-boot:run
 ```
-- API Base URL: `http://localhost:8080`
-- Health Endpoint: `http://localhost:8080/api/v1/health`
-- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- Base API URL: `http://localhost:8080`
+- Service Health Probe: `http://localhost:8080/api/v1/health`
+- Swagger UI Documentation: `http://localhost:8080/swagger-ui.html`
 - OpenAPI Specification: `http://localhost:8080/v3/api-docs`
 
-### 5. Run the Web Application
+### 5. Start the Web Client
+From the repository root:
 ```bash
-# Install dependencies from root
+# Install workspace dependencies
 pnpm install
 
-# (Optional) Re-generate TypeScript API client from backend OpenAPI spec
-pnpm generate-api
-
-# Start Vite dev server
+# Start the Vite development server
 pnpm --filter @placement/web run dev
 ```
-Open [http://localhost:5173](http://localhost:5173) in your browser.
-- Navigate to `/login` to sign in as Administrator or test student/trainer portals.
+Access the application at `http://localhost:5173`.
 
 ---
 
-## 🧪 Testing
+## Verification and Testing
 
-### Backend Unit & Integration Tests (27 tests)
+### Backend Unit and Integration Tests (46 Tests)
 ```bash
 cd apps/api
 .\mvnw.cmd test
 ```
 
-### Frontend Type-Checking & Production Build
+### Frontend TypeScript Verification and Production Build
 ```bash
 pnpm --filter @placement/web run build
 ```
 
 ---
 
-## 📡 API Endpoints Overview
+## Core Feature Overview
 
-### Phase 2: Cohorts & Student Profile
-| Method | Endpoint | Access | Description |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/batches` | `ADMIN` | Create a new cohort batch |
-| `GET` | `/api/v1/batches` | Authenticated | List batches with status, trainer, search filters |
-| `GET` | `/api/v1/batches/{id}` | Authenticated | Get cohort overview details |
-| `POST` | `/api/v1/batches/{id}/trainer` | `ADMIN` | Assign or change lead trainer |
-| `GET` | `/api/v1/batches/{id}/students` | `ADMIN`, `TRAINER` | View cohort student roster |
-| `POST` | `/api/v1/batches/{id}/students` | `ADMIN` | Enroll students into cohort |
-| `DELETE` | `/api/v1/batches/{id}/students/{studentId}` | `ADMIN` | Remove student enrollment |
-| `GET` | `/api/v1/batches/my-batch` | `STUDENT` | Get current student's enrolled batch |
-| `GET` | `/api/v1/students/profile` | `STUDENT` | Get personal academic profile & completeness score |
-| `PUT` | `/api/v1/students/profile` | `STUDENT` | Update degree, branch, CGPA, skills, social links |
-| `POST` | `/api/v1/students/profile/resume` | `STUDENT` | Upload resume document (PDF/DOCX max 5MB) |
-| `GET` | `/api/v1/students/profile/resume` | `STUDENT` | Download uploaded resume |
-| `GET` | `/api/v1/students/{studentId}/profile` | `ADMIN`, `TRAINER` | Inspect candidate student profile |
+### 1. Multi-Language Code Execution Sandbox
+Candidates solve algorithmic problems using Python 3.10, Java 21, JavaScript Node.js 20, or C++ GCC 13. Code editors offer clean, blank function signatures without exposing pre-filled answers or algorithms. Execution provides real-time stdin feedback, runtime measurements in milliseconds, and memory consumption metrics.
 
-### Phase 3: Questions & Assignments
-| Method | Endpoint | Access | Description |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/questions` | `ADMIN`, `TRAINER` | Create coding question with sample & hidden test cases |
-| `GET` | `/api/v1/questions` | Authenticated | List questions with difficulty, status, tag & search filters |
-| `GET` | `/api/v1/questions/{id}` | Authenticated | Get question statement (hidden test cases masked for students) |
-| `GET` | `/api/v1/questions/slug/{slug}` | Authenticated | Get question by slug |
-| `PUT` | `/api/v1/questions/{id}` | `ADMIN`, `TRAINER` | Update question details and resource constraints |
-| `DELETE` | `/api/v1/questions/{id}` | `ADMIN`, `TRAINER` | Delete question |
-| `POST` | `/api/v1/questions/{id}/test-cases` | `ADMIN`, `TRAINER` | Add test case to question suite |
-| `DELETE` | `/api/v1/questions/{id}/test-cases/{tcId}` | `ADMIN`, `TRAINER` | Remove test case from question |
-| `POST` | `/api/v1/assignments` | `ADMIN`, `TRAINER` | Create batch assignment with questions, points & deadlines |
-| `GET` | `/api/v1/assignments/batch/{batchId}` | Authenticated | List all assignments for a cohort batch |
-| `GET` | `/api/v1/assignments/my-assignments` | `STUDENT` | List personal assignments for enrolled batches |
-| `GET` | `/api/v1/assignments/{id}` | Authenticated | Get assignment details with attached question list |
-| `PUT` | `/api/v1/assignments/{id}` | `ADMIN`, `TRAINER` | Update assignment details and question points |
-| `DELETE` | `/api/v1/assignments/{id}` | `ADMIN`, `TRAINER` | Delete batch assignment |
+### 2. Company Previous Questions Archive
+A dedicated repository of authentic past interview questions categorized by hiring organizations (Amazon, Google, Microsoft, TCS Digital, Infosys), interview rounds (Online Coding Assessment, Technical Round 1, Technical Round 2), difficulty levels, and compensation tiers. Students can review interview guidance, sample test cases, and launch problems directly in the interactive IDE.
 
-### Phase 4: Coding Practice & Execution
-| Method | Endpoint | Access | Description |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/submissions/run` | Authenticated | Execute code against sample cases or custom stdin (sandbox execution) |
-| `POST` | `/api/v1/submissions/submit` | Authenticated | Formally submit code against full test suite, persist verdict & score |
-| `GET` | `/api/v1/submissions/my` | Authenticated | List user submission history with question & assignment filters |
-| `GET` | `/api/v1/submissions/{id}` | Authenticated | Get detailed submission breakdown with per-test-case verdicts |
+### 3. Anti-Cheat Proctored Assessments
+Timed mock assessments feature a real-time integrity monitoring pipeline:
+- Tab blur, window minimize, and multi-monitor movement detection.
+- Copy and paste prevention within problem editors.
+- Automated progressive warnings (3 strikes threshold) culminating in candidate disqualification.
+- Live proctoring radar allowing trainers and administrators to inspect active candidate statuses, elapsed time, and strike tallies.
 
-### Phase 5: Scoring & Engagement
-| Method | Endpoint | Access | Description |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/v1/leaderboards/global` | Authenticated | Global leaderboard ranked by score, problems solved, and streaks |
-| `GET` | `/api/v1/leaderboards/batch/{batchId}` | Authenticated | Cohort batch leaderboard ranked by score, problems solved, and streaks |
-| `GET` | `/api/v1/scoring/heatmap` | Authenticated | Current student 365-day activity contribution heatmap (Asia/Kolkata) |
-| `GET` | `/api/v1/scoring/heatmap/{studentId}` | `ADMIN`, `TRAINER` | Inspect candidate student's activity contribution heatmap |
-| `GET` | `/api/v1/scoring/overview` | Authenticated | Current student global rank, total score, problems solved, and active streak |
-| `GET` | `/api/v1/scoring/overview/{studentId}` | `ADMIN`, `TRAINER` | Inspect candidate student's scoring rank and streak status |
+### 4. Asia/Kolkata Activity Streaks and Scoring
+Activity heatmaps and consecutive practice streaks are calculated strictly against the `Asia/Kolkata` (UTC+05:30) timezone, eliminating calendar skew from server UTC timestamps. Cohort and global leaderboards highlight top performers across solved problem counts and total score.
 
-### Phase 9: Mock Placement Assessments & Anti-Cheat Proctoring
-| Method | Endpoint | Access | Description |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/v1/assessments` | `ADMIN`, `TRAINER` | Create a new mock assessment or timed contest |
-| `GET` | `/api/v1/assessments` | Authenticated | List all assessments with status and eligibility filters |
-| `GET` | `/api/v1/assessments/{id}` | Authenticated | Get detailed assessment metadata, time limits & question list |
-| `POST` | `/api/v1/assessments/{id}/start` | `STUDENT` | Start proctored assessment attempt & initialize timer session |
-| `POST` | `/api/v1/assessments/{id}/violations` | `STUDENT` | Audit anti-cheat tab-switch or copy-paste violation strikes |
-| `POST` | `/api/v1/assessments/{id}/submit` | `STUDENT` | Submit final assessment attempt, compute score & dispatch alert |
-| `GET` | `/api/v1/assessments/{id}/leaderboard` | Authenticated | Live contest leaderboard ranked by score and duration |
-| `GET` | `/api/v1/assessments/{id}/roster` | `ADMIN`, `TRAINER` | Live proctoring radar tracking candidate strikes and disqualifications |
-| `GET` | `/api/v1/assessments/my-attempts` | `STUDENT` | List personal assessment history, scores, and integrity rating |
+### 5. Placement Recruitment Drives
+Management of campus and pool drives with automated eligibility filters based on minimum CGPA, active academic backlogs, and graduation year. Students can track their application lifecycle across four stages: Registered, Shortlisted, Interview Scheduled, and Offer Extended.
+
+### 6. Administrative Impersonation and Audit Logs
+Administrators can initiate read-only impersonation sessions to inspect student dashboards directly while logging all actions to an immutable database audit log.
 
 ---
 
-## 📋 Roadmap & Phase Status
-- [x] **Phase 0 - Foundation**: Monorepo skeleton, Spring Boot modular monolith, Flyway baseline, React app shell with Student/Trainer/Admin portals, Docker Compose, CI, and OpenAPI client generation.
-- [x] **Phase 1 - Auth & RBAC**: Stateless JWT + refresh token rotation, password hashing, seeded admin, user creation, CSV bulk import, force-change-password, and audit log table.
-- [x] **Phase 2 - Student Profile & Batches**: Batch CRUD, cohort schedules, trainer assignment, student roster enrollments, profile credentials builder, skills chip tagger, resume upload/download (PDF/DOCX max 5MB), and live completeness meter.
-- [x] **Phase 3 - Questions & Assignments**: Markdown question builder, sample & hidden test cases, assignments with deadlines, urgency countdowns, and student problem viewers.
-- [x] **Phase 4 - Coding Practice & Execution**: Judge0 sandbox, Monaco editor, Run vs Submit verdicts, custom stdin console, and submission audit trail.
-- [x] **Phase 5 - Scoring & Engagement**: Asia/Kolkata streaks, GitHub activity heatmap, batch & global leaderboards with top 3 podium recognition.
-- [x] **Phase 6 - Placement Recruitment System**: Campus & partner corporate drives, eligibility evaluations, package filters, and 4-stage application pipelines.
-- [x] **Phase 7 - Admin Power Features & Analytics**: Read-only student impersonation, cohort progress analytics, weak topics radar, and real-time in-app notification center.
-- [x] **Phase 8 - Production Hardening & Deployment**: OWASP security headers, sliding-window API rate limiting, multi-stage production Dockerfiles, Nginx SPA routing, and [Production Deployment Runbook](docs/deployment.md).
-- [x] **Phase 9 - Mock Assessments & Proctoring Engine**: Timed recruitment mock tests, coding contests, full-screen anti-cheat tab-switch detection (3 strikes limit), code execution runner, scorecards, and live trainer proctoring radar.
+## REST API Reference
 
+### Authentication and Identity
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/auth/login` | Public | Authenticate with credentials and receive JWT pair |
+| `POST` | `/api/v1/auth/refresh` | Public | Exchange refresh token for renewed access token |
+| `POST` | `/api/v1/auth/change-password` | Authenticated | Update user password and clear forced change flag |
+| `POST` | `/api/v1/auth/impersonate/{userId}` | `ADMIN` | Issue scoped impersonation token for candidate inspection |
 
+### Cohort and Student Management
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/batches` | `ADMIN` | Create a training cohort batch |
+| `GET` | `/api/v1/batches` | Authenticated | List batches with status, trainer, and search criteria |
+| `GET` | `/api/v1/batches/{id}/students` | `ADMIN`, `TRAINER` | View enrolled students in cohort |
+| `POST` | `/api/v1/batches/{id}/students` | `ADMIN` | Enroll students into cohort |
+| `GET` | `/api/v1/students/profile` | `STUDENT` | Retrieve academic profile and completeness score |
+| `PUT` | `/api/v1/students/profile` | `STUDENT` | Update academic records, technical skills, and links |
+| `POST` | `/api/v1/students/profile/resume` | `STUDENT` | Upload candidate resume document (PDF/DOCX, max 5MB) |
+
+### Problem Catalog and Batch Assignments
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/questions` | `ADMIN`, `TRAINER` | Create problem with sample and hidden test suites |
+| `GET` | `/api/v1/questions` | Authenticated | List problems with difficulty, tag, and search filters |
+| `GET` | `/api/v1/questions/{id}` | Authenticated | Retrieve problem description (hidden tests masked for students) |
+| `POST` | `/api/v1/assignments` | `ADMIN`, `TRAINER` | Create batch assignment with scheduled deadlines |
+| `GET` | `/api/v1/assignments/my-assignments` | `STUDENT` | Retrieve active assignments for enrolled cohorts |
+
+### Code Execution and Practice
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/submissions/run` | Authenticated | Test code against sample cases or custom stdin |
+| `POST` | `/api/v1/submissions/submit` | Authenticated | Submit code against all test cases and record verdict |
+| `GET` | `/api/v1/submissions/my` | Authenticated | List candidate submission history and verdicts |
+| `GET` | `/api/v1/submissions/{id}` | Authenticated | Retrieve per-test case execution breakdown |
+
+### Assessments and Proctoring
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/assessments` | `ADMIN`, `TRAINER` | Create timed mock assessment or coding contest |
+| `GET` | `/api/v1/assessments` | Authenticated | List assessments with status and eligibility criteria |
+| `POST` | `/api/v1/assessments/{id}/start` | `STUDENT` | Begin proctored assessment attempt |
+| `POST` | `/api/v1/assessments/{id}/violations` | `STUDENT` | Record proctoring infraction (tab blur, copy-paste) |
+| `POST` | `/api/v1/assessments/{id}/submit` | `STUDENT` | Finalize assessment attempt and compute score |
+| `GET` | `/api/v1/assessments/{id}/roster` | `ADMIN`, `TRAINER` | Inspect live proctoring radar with strike indicators |
+
+### Placement Recruitment Drives
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/v1/placement/drives` | `ADMIN`, `TRAINER` | Create campus recruitment drive |
+| `GET` | `/api/v1/placement/drives` | Authenticated | List recruitment drives with eligibility indicators |
+| `POST` | `/api/v1/placement/drives/{id}/apply` | `STUDENT` | Submit drive application |
+| `PATCH` | `/api/v1/placement/drives/{id}/applications/{appId}` | `ADMIN`, `TRAINER` | Advance application status stage |
+
+---
+
+## Engineering Standards
+
+- **Zero Inline Secrets**: Environment variables and Spring configuration properties manage all database credentials and JWT signing keys.
+- **Strict Separation of Concerns**: Clean isolation between client views and server-side evaluation engines.
+- **Professional User Interface**: Clean typography, curated dark/light palettes, and Lucide SVG iconography across all user portals.

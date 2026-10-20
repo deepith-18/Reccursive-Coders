@@ -309,7 +309,7 @@ export const TrainerDrivesPage: React.FC = () => {
                   <option value="OA_SCHEDULED">ONLINE ASSESSMENT SCHEDULED</option>
                   <option value="INTERVIEW_ROUND_1">TECHNICAL INTERVIEW (ROUND 1)</option>
                   <option value="INTERVIEW_ROUND_2">HR / MANAGEMENT INTERVIEW</option>
-                  <option value="OFFERED">OFFERED 🎉</option>
+                  <option value="OFFERED">OFFERED (FINAL SELECTION)</option>
                   <option value="REJECTED">REJECTED</option>
                 </select>
               </div>
