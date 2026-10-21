@@ -16,6 +16,10 @@ import {
   Briefcase,
   Bell,
   CheckCheck,
+  Menu,
+  X,
+  ShieldAlert,
+  Building2,
 } from 'lucide-react';
 import { StatusBadge } from './StatusBadge';
 import { useAuth } from '@/features/auth/AuthContext';
@@ -33,10 +37,16 @@ export const Navbar: React.FC = () => {
       : user.role
     : null;
 
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [notificationsOpen, setNotificationsOpen] = React.useState(false);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const [notifications, setNotifications] = React.useState<NotificationResponse[]>([]);
   const [isLoadingNotifications, setIsLoadingNotifications] = React.useState(false);
+
+  // Close mobile navigation drawer whenever route changes
+  React.useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   React.useEffect(() => {
     if (isAuthenticated) {
@@ -430,6 +440,18 @@ export const Navbar: React.FC = () => {
                 )}
               </div>
 
+              {/* Mobile Navigation Drawer Toggle */}
+              {role && (
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  aria-label="Toggle Navigation Drawer"
+                  className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.08] transition-all cursor-pointer md:hidden"
+                >
+                  {mobileMenuOpen ? <X className="w-4 h-4 text-violet-400" /> : <Menu className="w-4 h-4" />}
+                </button>
+              )}
+
               <button
                 onClick={handleLogout}
                 title="Sign Out"
@@ -449,6 +471,256 @@ export const Navbar: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile Responsive Navigation Drawer */}
+      {mobileMenuOpen && isAuthenticated && role && (
+        <div className="md:hidden border-t border-white/[0.08] bg-[#14151e]/98 backdrop-blur-2xl p-4 animate-in slide-in-from-top-2 duration-200 shadow-2xl">
+          <div className="pb-3 mb-3 border-b border-white/[0.06] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+              <span className="text-xs font-bold text-white uppercase tracking-wider">{role} Portal</span>
+            </div>
+            <span className="text-[10px] text-zinc-400 font-mono">{user?.email}</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {role === 'STUDENT' && (
+              <>
+                <Link
+                  to="/student"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    location.pathname === '/student'
+                      ? 'bg-violet-500/20 text-white border border-violet-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <LayoutDashboard className="w-4 h-4 text-violet-400" />
+                  <span>Dashboard</span>
+                </Link>
+                <Link
+                  to="/student/practice"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/student/practice')
+                      ? 'bg-emerald-500/20 text-white border border-emerald-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Code className="w-4 h-4 text-emerald-400" />
+                  <span>Practice</span>
+                </Link>
+                <Link
+                  to="/student/company-archive"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/student/company-archive')
+                      ? 'bg-blue-500/20 text-white border border-blue-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Building2 className="w-4 h-4 text-blue-400" />
+                  <span>Company Qs</span>
+                </Link>
+                <Link
+                  to="/student/assignments"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/student/assignments')
+                      ? 'bg-amber-500/20 text-white border border-amber-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <FileText className="w-4 h-4 text-amber-400" />
+                  <span>Assignments</span>
+                </Link>
+                <Link
+                  to="/student/assessments"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/student/assessments')
+                      ? 'bg-rose-500/20 text-white border border-rose-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <ShieldAlert className="w-4 h-4 text-rose-400" />
+                  <span>Mock Tests</span>
+                </Link>
+                <Link
+                  to="/student/placements"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/student/placements')
+                      ? 'bg-cyan-500/20 text-white border border-cyan-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Briefcase className="w-4 h-4 text-cyan-400" />
+                  <span>Placements</span>
+                </Link>
+                <Link
+                  to="/student/leaderboard"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/student/leaderboard')
+                      ? 'bg-yellow-500/20 text-white border border-yellow-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Trophy className="w-4 h-4 text-yellow-400" />
+                  <span>Leaderboard</span>
+                </Link>
+                <Link
+                  to="/student/profile"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/student/profile')
+                      ? 'bg-sky-500/20 text-white border border-sky-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <UserIcon className="w-4 h-4 text-sky-400" />
+                  <span>Profile</span>
+                </Link>
+              </>
+            )}
+
+            {role === 'TRAINER' && (
+              <>
+                <Link
+                  to="/trainer"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    location.pathname === '/trainer'
+                      ? 'bg-fuchsia-500/20 text-white border border-fuchsia-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4 text-fuchsia-400" />
+                  <span>Overview</span>
+                </Link>
+                <Link
+                  to="/trainer/batches"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/trainer/batches')
+                      ? 'bg-violet-500/20 text-white border border-violet-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Users className="w-4 h-4 text-violet-400" />
+                  <span>Batches</span>
+                </Link>
+                <Link
+                  to="/trainer/questions"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/trainer/questions')
+                      ? 'bg-emerald-500/20 text-white border border-emerald-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <FilePlus className="w-4 h-4 text-emerald-400" />
+                  <span>Questions</span>
+                </Link>
+                <Link
+                  to="/trainer/assessments"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/trainer/assessments')
+                      ? 'bg-rose-500/20 text-white border border-rose-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <ShieldAlert className="w-4 h-4 text-rose-400" />
+                  <span>Assessments</span>
+                </Link>
+                <Link
+                  to="/trainer/placements"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/trainer/placements')
+                      ? 'bg-cyan-500/20 text-white border border-cyan-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Briefcase className="w-4 h-4 text-cyan-400" />
+                  <span>Placements</span>
+                </Link>
+                <Link
+                  to="/trainer/leaderboard"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/trainer/leaderboard')
+                      ? 'bg-yellow-500/20 text-white border border-yellow-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Trophy className="w-4 h-4 text-yellow-400" />
+                  <span>Leaderboard</span>
+                </Link>
+              </>
+            )}
+
+            {role === 'ADMIN' && (
+              <>
+                <Link
+                  to="/admin"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    location.pathname === '/admin'
+                      ? 'bg-amber-500/20 text-white border border-amber-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Shield className="w-4 h-4 text-amber-400" />
+                  <span>Control Center</span>
+                </Link>
+                <Link
+                  to="/admin/users"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/admin/users')
+                      ? 'bg-violet-500/20 text-white border border-violet-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Users className="w-4 h-4 text-violet-400" />
+                  <span>Users</span>
+                </Link>
+                <Link
+                  to="/admin/batches"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/admin/batches')
+                      ? 'bg-emerald-500/20 text-white border border-emerald-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Command className="w-4 h-4 text-emerald-400" />
+                  <span>Batches</span>
+                </Link>
+                <Link
+                  to="/admin/placements"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/admin/placements')
+                      ? 'bg-cyan-500/20 text-white border border-cyan-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Briefcase className="w-4 h-4 text-cyan-400" />
+                  <span>Drives</span>
+                </Link>
+                <Link
+                  to="/admin/leaderboard"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/admin/leaderboard')
+                      ? 'bg-yellow-500/20 text-white border border-yellow-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Trophy className="w-4 h-4 text-yellow-400" />
+                  <span>Global Rank</span>
+                </Link>
+                <Link
+                  to="/admin/impersonate"
+                  className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-medium transition-all ${
+                    isLinkActive('/admin/impersonate')
+                      ? 'bg-rose-500/20 text-white border border-rose-500/30'
+                      : 'bg-white/[0.03] text-zinc-300 hover:bg-white/[0.06]'
+                  }`}
+                >
+                  <Shield className="w-4 h-4 text-rose-400" />
+                  <span>Impersonate</span>
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

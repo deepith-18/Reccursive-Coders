@@ -43,6 +43,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
   const [selectedLanguage, setSelectedLanguage] = useState<ProgrammingLanguage>('PYTHON');
   const [sourceCode, setSourceCode] = useState<string>('');
   const [leftTab, setLeftTab] = useState<'statement' | 'submissions'>('statement');
+  const [mobileWorkspaceTab, setMobileWorkspaceTab] = useState<'problem' | 'editor' | 'console'>('editor');
 
   // Bottom Console Tabs
   const [bottomTab, setBottomTab] = useState<'testcases' | 'custom' | 'result'>('testcases');
@@ -122,6 +123,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
   const handleRunCode = async (overrideCustom?: string) => {
     setIsRunning(true);
     setIsConsoleExpanded(true);
+    setMobileWorkspaceTab('console');
 
     const isCustomActive = bottomTab === 'custom' && customInput.trim().length > 0;
     const inputToSend =
@@ -166,6 +168,7 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
   const handleSubmitCode = async () => {
     setIsSubmitting(true);
     setIsConsoleExpanded(true);
+    setMobileWorkspaceTab('console');
     setBottomTab('result');
 
     try {
@@ -332,10 +335,64 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
         </div>
       </header>
 
+      {/* MOBILE SEGMENTED VIEW CONTROLS (< lg screens) */}
+      <div className="lg:hidden flex items-center bg-[#15161c] border-b border-white/[0.08] px-3 py-1.5 gap-1.5 text-xs shrink-0">
+        <button
+          type="button"
+          onClick={() => setMobileWorkspaceTab('problem')}
+          className={`flex-1 py-1.5 px-2 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition ${
+            mobileWorkspaceTab === 'problem'
+              ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          <FileCode className="w-3.5 h-3.5" />
+          <span>Problem</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileWorkspaceTab('editor')}
+          className={`flex-1 py-1.5 px-2 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition ${
+            mobileWorkspaceTab === 'editor'
+              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          <Terminal className="w-3.5 h-3.5" />
+          <span>Editor</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setMobileWorkspaceTab('console');
+            setIsConsoleExpanded(true);
+          }}
+          className={`flex-1 py-1.5 px-2 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition ${
+            mobileWorkspaceTab === 'console'
+              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+              : 'text-zinc-400 hover:text-white'
+          }`}
+        >
+          <Clock className="w-3.5 h-3.5" />
+          <span>Console</span>
+          {executionResult && (
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                executionResult.verdict === 'ACCEPTED' ? 'bg-emerald-400' : 'bg-rose-400'
+              }`}
+            />
+          )}
+        </button>
+      </div>
+
       {/* MAIN SPLIT WORKSPACE BODY */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* LEFT PANEL: PROBLEM STATEMENT & SUBMISSIONS HISTORY */}
-        <div className="w-1/2 border-r border-white/[0.08] flex flex-col bg-[#121318]/50">
+        <div
+          className={`w-full lg:w-1/2 border-r border-white/[0.08] flex-col bg-[#121318]/50 ${
+            mobileWorkspaceTab === 'problem' ? 'flex flex-1' : 'hidden lg:flex'
+          }`}
+        >
           {/* Left Tabs */}
           <div className="h-10 border-b border-white/10 px-4 flex items-center gap-4 text-xs font-semibold bg-muted/20">
             <button
@@ -481,9 +538,17 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
         </div>
 
         {/* RIGHT PANEL: MONACO EDITOR & BOTTOM TEST CONSOLE */}
-        <div className="w-1/2 flex flex-col bg-[#0f1014]">
+        <div
+          className={`w-full lg:w-1/2 flex-col bg-[#0f1014] ${
+            mobileWorkspaceTab !== 'problem' ? 'flex flex-1' : 'hidden lg:flex'
+          }`}
+        >
           {/* Editor Container */}
-          <div className="flex-1 overflow-hidden relative">
+          <div
+            className={`overflow-hidden relative ${
+              mobileWorkspaceTab === 'console' ? 'hidden lg:block lg:flex-1' : 'flex-1'
+            }`}
+          >
             <Editor
               height="100%"
               language={selectedLanguage === 'CPP' ? 'cpp' : selectedLanguage === 'JAVASCRIPT' ? 'javascript' : selectedLanguage.toLowerCase()}
@@ -507,7 +572,9 @@ export const CodingWorkspace: React.FC<CodingWorkspaceProps> = ({
           {/* BOTTOM TEST CONSOLE & VERDICTS DRAWER */}
           <div
             className={`border-t border-white/[0.08] bg-[#15161c]/95 backdrop-blur-md flex flex-col transition-all duration-200 ${
-              isConsoleExpanded ? 'h-72' : 'h-10'
+              mobileWorkspaceTab === 'console'
+                ? 'flex-1 h-full lg:flex-none ' + (isConsoleExpanded ? 'lg:h-72' : 'lg:h-10')
+                : isConsoleExpanded ? 'h-72' : 'h-10'
             }`}
           >
             {/* Console Header Bar */}

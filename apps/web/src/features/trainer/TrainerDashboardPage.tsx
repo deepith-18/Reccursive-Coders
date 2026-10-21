@@ -90,7 +90,7 @@ export const TrainerDashboardPage: React.FC = () => {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Active Cohorts</span>
             <Layers className="w-5 h-5 text-violet-400" />
@@ -99,7 +99,7 @@ export const TrainerDashboardPage: React.FC = () => {
           <p className="text-xs text-zinc-400">Assigned training cohorts</p>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Enrolled Students</span>
             <Users className="w-5 h-5 text-fuchsia-400" />
@@ -108,7 +108,7 @@ export const TrainerDashboardPage: React.FC = () => {
           <p className="text-xs text-zinc-400">Across all cohort rosters</p>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Problem Bank</span>
             <FilePlus className="w-5 h-5 text-emerald-400" />
@@ -117,7 +117,7 @@ export const TrainerDashboardPage: React.FC = () => {
           <p className="text-xs text-zinc-400">Published coding challenges</p>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Assignments</span>
             <CheckCircle2 className="w-5 h-5 text-amber-400" />

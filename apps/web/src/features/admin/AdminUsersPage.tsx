@@ -33,13 +33,25 @@ export const AdminUsersPage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
 
+  const generateSecurePassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*';
+    let pass = '';
+    const array = new Uint8Array(12);
+    crypto.getRandomValues(array);
+    for (let i = 0; i < 12; i++) {
+      const byte = array[i] ?? 0;
+      pass += chars.charAt(byte % chars.length);
+    }
+    return pass;
+  };
+
   // Create User Form State
   const [createForm, setCreateForm] = useState({
     fullName: '',
     email: '',
     phone: '',
     role: 'STUDENT' as Role,
-    temporaryPassword: 'Welcome@2026!',
+    temporaryPassword: '',
   });
   const [createError, setCreateError] = useState<string | null>(null);
 
@@ -82,7 +94,7 @@ export const AdminUsersPage: React.FC = () => {
         email: '',
         phone: '',
         role: 'STUDENT' as Role,
-        temporaryPassword: 'Welcome@2026!',
+        temporaryPassword: '',
       });
       setCreateError(null);
     },
@@ -391,13 +403,23 @@ export const AdminUsersPage: React.FC = () => {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-white flex items-center gap-1">
-                    <KeyRound className="w-3 h-3 text-muted-foreground" /> Temp Password
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-white flex items-center gap-1">
+                      <KeyRound className="w-3 h-3 text-muted-foreground" /> Temp Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setCreateForm({ ...createForm, temporaryPassword: generateSecurePassword() })}
+                      className="text-[10px] text-violet-400 hover:text-violet-300 font-semibold cursor-pointer"
+                    >
+                      Generate Secure
+                    </button>
+                  </div>
                   <input
                     type="text"
                     value={createForm.temporaryPassword}
                     onChange={(e) => setCreateForm({ ...createForm, temporaryPassword: e.target.value })}
+                    placeholder="Enter or generate temporary password"
                     className="w-full px-3 py-2 rounded-xl bg-secondary/80 border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-primary"
                   />
                 </div>

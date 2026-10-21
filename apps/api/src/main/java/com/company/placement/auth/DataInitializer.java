@@ -47,6 +47,12 @@ public class DataInitializer implements CommandLineRunner {
     private final com.company.placement.notification.NotificationRepository notificationRepository;
     private final com.company.placement.assessment.AssessmentRepository assessmentRepository;
 
+    @org.springframework.beans.factory.annotation.Value("${app.seed.admin-password:${ADMIN_INITIAL_PASSWORD:AdminPassword123!}}")
+    private String adminInitialPassword;
+
+    @org.springframework.beans.factory.annotation.Value("${app.seed.default-password:${DEFAULT_SEED_PASSWORD:Welcome@2026!}}")
+    private String defaultSeedPassword;
+
     @Override
     public void run(String... args) {
         log.info("Checking and seeding demo dataset for Admin, Trainer, and Student roles...");
@@ -57,7 +63,7 @@ public class DataInitializer implements CommandLineRunner {
             return userRepository.save(User.builder()
                     .email("admin@company.com")
                     .fullName("Platform Administrator")
-                    .passwordHash(passwordEncoder.encode("AdminPassword123!"))
+                    .passwordHash(passwordEncoder.encode(adminInitialPassword))
                     .role(Role.ADMIN)
                     .status(UserStatus.ACTIVE)
                     .forcePasswordChange(false)
@@ -71,7 +77,7 @@ public class DataInitializer implements CommandLineRunner {
             return userRepository.save(User.builder()
                     .email("trainer@company.com")
                     .fullName("Sarah Jenkins (Lead Trainer)")
-                    .passwordHash(passwordEncoder.encode("Welcome@2026!"))
+                    .passwordHash(passwordEncoder.encode(defaultSeedPassword))
                     .role(Role.TRAINER)
                     .status(UserStatus.ACTIVE)
                     .forcePasswordChange(false)
@@ -85,7 +91,7 @@ public class DataInitializer implements CommandLineRunner {
             return userRepository.save(User.builder()
                     .email("student@company.com")
                     .fullName("Alex Chen")
-                    .passwordHash(passwordEncoder.encode("Welcome@2026!"))
+                    .passwordHash(passwordEncoder.encode(defaultSeedPassword))
                     .role(Role.STUDENT)
                     .status(UserStatus.ACTIVE)
                     .forcePasswordChange(false)

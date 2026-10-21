@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-placement_platform}
       POSTGRES_USER: ${POSTGRES_USER:-placement_admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeThisInProduction123!}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Error: POSTGRES_PASSWORD environment variable must be set}
     volumes:
       - postgres_prod_data:/var/lib/postgresql/data
     healthcheck:
@@ -34,8 +34,8 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-placement_platform}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-placement_admin}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-ChangeThisInProduction123!}
-      JWT_SECRET: ${JWT_SECRET:-9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?Error: POSTGRES_PASSWORD environment variable must be set}
+      JWT_SECRET: ${JWT_SECRET:?Error: JWT_SECRET environment variable must be set}
       JUDGE0_URL: ${JUDGE0_URL:-http://judge0-server:2358}
       STORAGE_RESUME_PATH: /app/uploads/resumes
     volumes:

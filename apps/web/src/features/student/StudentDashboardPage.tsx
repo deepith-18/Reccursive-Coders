@@ -112,7 +112,7 @@ export const StudentDashboardPage: React.FC = () => {
 
       {/* Top 3 Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Daily Streak</span>
             <Flame className="w-5 h-5 text-amber-400 fill-amber-400/20 animate-pulse" />
@@ -125,7 +125,7 @@ export const StudentDashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Score &amp; Standing</span>
             <Award className="w-5 h-5 text-violet-400" />
@@ -138,7 +138,7 @@ export const StudentDashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Problems Solved</span>
             <Trophy className="w-5 h-5 text-emerald-400" />
@@ -268,7 +268,7 @@ export const StudentDashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Link
           to="/student/profile"
-          className="p-5 rounded-2xl glass-card hover:border-violet-500/40 transition-all group flex items-start gap-4"
+          className="p-5 clay-card-interactive group flex items-start gap-4"
         >
           <div className="p-3 rounded-xl bg-violet-500/10 text-violet-400 group-hover:scale-110 transition-transform">
             <UserCheck className="w-6 h-6" />
@@ -285,7 +285,7 @@ export const StudentDashboardPage: React.FC = () => {
 
         <Link
           to="/student/practice"
-          className="p-5 rounded-2xl glass-card hover:border-emerald-500/40 transition-all group flex items-start gap-4"
+          className="p-5 clay-card-interactive group flex items-start gap-4"
         >
           <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
             <BookOpen className="w-6 h-6" />
@@ -302,17 +302,17 @@ export const StudentDashboardPage: React.FC = () => {
 
         <Link
           to="/student/leaderboard"
-          className="p-5 rounded-2xl glass-card hover:border-amber-500/40 transition-all group flex items-start gap-4"
+          className="p-5 clay-card-interactive group flex items-start gap-4"
         >
           <div className="p-3 rounded-xl bg-amber-500/10 text-amber-400 group-hover:scale-110 transition-transform">
             <Trophy className="w-6 h-6" />
           </div>
           <div>
             <h4 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors flex items-center gap-1">
-              Leaderboards <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              Global Leaderboard <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
             </h4>
             <p className="text-xs text-zinc-400 mt-1">
-              Global and cohort batch standings with streak recognition.
+              Live standings across algorithmic points, streaks, and batches.
             </p>
           </div>
         </Link>

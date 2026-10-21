@@ -38,7 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ items, portalName }) => {
               className={({ isActive }) =>
                 `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all group ${
                   isActive
-                    ? 'bg-white/[0.08] text-white border border-white/[0.12] shadow-sm font-semibold'
+                    ? 'clay-card text-white border-violet-500/40 font-semibold shadow-lg shadow-violet-500/10'
                     : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
                 }`
               }
@@ -57,7 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ items, portalName }) => {
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full font-semibold border ${
                         isActive
-                          ? 'bg-violet-500/20 text-violet-300 border-violet-500/30'
+                          ? 'bg-violet-500/25 text-violet-300 border-violet-500/40 shadow-sm'
                           : 'bg-white/[0.04] text-zinc-400 border-white/[0.06] group-hover:border-white/10'
                       }`}
                     >

@@ -95,7 +95,7 @@ export const ChangePasswordModal: React.FC = () => {
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="e.g. Welcome@2026!"
+              placeholder="Enter your temporary password"
               className="w-full px-3.5 py-2.5 rounded-xl bg-secondary/80 border border-white/10 text-white placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>

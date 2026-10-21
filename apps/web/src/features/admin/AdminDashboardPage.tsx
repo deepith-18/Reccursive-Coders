@@ -114,7 +114,7 @@ export const AdminDashboardPage: React.FC = () => {
 
       {/* Primary KPI Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Total Students</span>
             <UserCheck className="w-4 h-4 text-violet-400" />
@@ -125,7 +125,7 @@ export const AdminDashboardPage: React.FC = () => {
           <p className="text-[11px] text-zinc-500">Enrolled technical coders</p>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Active Today</span>
             <Activity className="w-4 h-4 text-emerald-400" />
@@ -136,7 +136,7 @@ export const AdminDashboardPage: React.FC = () => {
           <p className="text-[11px] text-zinc-500">Coders active in IST today</p>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Acceptance Rate</span>
             <TrendingUp className="w-4 h-4 text-cyan-400" />
@@ -147,7 +147,7 @@ export const AdminDashboardPage: React.FC = () => {
           <p className="text-[11px] text-zinc-500">Across {overview?.totalSubmissions ?? 0} submissions</p>
         </div>
 
-        <div className="p-5 rounded-2xl glass-card space-y-2">
+        <div className="p-5 clay-card space-y-2">
           <div className="flex items-center justify-between text-zinc-400">
             <span className="text-xs font-semibold uppercase tracking-wider">Placement Drives</span>
             <Briefcase className="w-4 h-4 text-amber-400" />
@@ -162,7 +162,7 @@ export const AdminDashboardPage: React.FC = () => {
       {/* Weak Topics Radar & Language Distribution */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Weak Topics Radar (2 Cols) */}
-        <div className="lg:col-span-2 p-6 rounded-3xl glass-card space-y-5">
+        <div className="lg:col-span-2 p-6 clay-card space-y-5">
           <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
             <div>
               <h2 className="text-base font-bold text-white flex items-center gap-2">
