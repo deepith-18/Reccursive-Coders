@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { HealthService, ApiResponseHealthResponse } from '@/api/generated';
 import { StatusBadge } from '@/shared/components/StatusBadge';
