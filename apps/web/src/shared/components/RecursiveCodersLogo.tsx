@@ -35,15 +35,15 @@ export const RecursiveCodersLogo: React.FC<RecursiveCodersLogoProps> = ({
       {/* Typography: Matching official branding */}
       {showText && (
         <div className="flex flex-col leading-tight">
-          <div className="flex items-center gap-1.5 font-bold tracking-tight text-white">
+          <div className="flex items-center gap-1.5 font-bold tracking-tight text-zinc-900 dark:text-white">
             <span className={text}>Recursive Coders</span>
-            <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 font-semibold hidden sm:inline-block">
+            <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 font-semibold hidden sm:inline-block">
               Bengaluru
             </span>
           </div>
           {showTagline && (
             <span
-              className={`${tag} text-zinc-400 italic font-serif tracking-normal`}
+              className={`${tag} text-zinc-600 dark:text-zinc-400 italic font-serif tracking-normal`}
               style={{ fontFamily: "'Georgia', 'Cambria', serif" }}
             >
               &ldquo;Think Recursive, Code Progressive&rdquo;

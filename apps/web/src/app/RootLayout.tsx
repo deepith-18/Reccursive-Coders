@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Navbar } from '@/shared/components/Navbar';
+import { Footer } from '@/shared/components/Footer';
 import { useAuth } from '@/features/auth/AuthContext';
 import { Eye, LogOut } from 'lucide-react';
 
@@ -38,9 +39,7 @@ export const RootLayout: React.FC = () => {
       <div className="flex-1 flex flex-col">
         <Outlet />
       </div>
-      <footer className="border-t border-white/5 py-4 px-6 text-center text-xs text-muted-foreground glass-panel">
-        <p>&copy; {new Date().getFullYear()} Recursive Coders Bengaluru &bull; Think Recursive, Code Progressive.</p>
-      </footer>
+      <Footer />
     </div>
   );
 };

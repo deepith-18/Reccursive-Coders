@@ -33,8 +33,9 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({ allowedRoles, children }) 
     return <ChangePasswordModal />;
   }
 
-  // Check role authorization
-  if (!allowedRoles.includes(user.role as 'STUDENT' | 'TRAINER' | 'ADMIN')) {
+  // Check role authorization (normalize ROLE_ prefix if present)
+  const normalizedRole = user.role?.startsWith('ROLE_') ? user.role.substring(5) : user.role;
+  if (!allowedRoles.includes(normalizedRole as 'STUDENT' | 'TRAINER' | 'ADMIN')) {
     return (
       <div className="max-w-md mx-auto my-16 p-8 rounded-3xl glass-card border border-rose-500/20 text-center space-y-4">
         <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 mx-auto flex items-center justify-center border border-rose-500/20">
